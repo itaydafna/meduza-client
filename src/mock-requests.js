@@ -42,6 +42,18 @@ export function fetchModelTables(modelId) {
     });
 }
 
+
+export function createTable(newTable) {
+    return new Promise((resolve) => {
+        TABLES.push(newTable);
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
+
+
 //utils
 
 function generateMockTables(num) {
