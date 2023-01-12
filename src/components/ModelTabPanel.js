@@ -13,7 +13,7 @@ import ModelErd from './model-erd/ModelErd'
 const ModelTabPanel = ({ model }) => {
     return (
         <StyledTabPanel key={model.id} value={model.id} index={model.id}>
-            <ModelErd id={model.id}/>
+            <ModelErd modelId={model.id}/>
             <BottomActionButtons>
                 <Fab color="primary" aria-label="add">
                     <TableChartSharpIcon />

@@ -1,37 +1,21 @@
 import * as React from 'react';
 import ReactFlow, {
-    applyEdgeChanges,
-    applyNodeChanges,
     Background,
     Controls,
     addEdge,
     Handle,
     useNodesState,
     useEdgesState,
-    useNodes,
-    useEdges, ReactFlowProvider,
+    ReactFlowProvider,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useCallback, useMemo, useState, memo } from 'react';
+import { useCallback, useMemo, useState, memo, useEffect } from 'react';
 import { styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { random } from 'lodash/fp';
 import ButtonEdge from './ButtonEdge';
-
-function generateMockTables(num) {
-    return Array.from({ length: num }).map((_, idx) => {
-        const tableName = `Table ${idx + 1}`;
-        const table = {
-            id: `${uuidv4()}`,
-            name: tableName,
-            columns: Array.from({ length: random(3, 7) }).map((_, idx) => ({
-                id: `${uuidv4()}`,
-                name: `Column ${idx + 1} (${tableName})`,
-            })),
-        };
-        return table;
-    });
-}
+import { useTablesQuery } from '../../hooks/tables.hooks';
+import { isEmpty } from 'lodash';
 
 const TableNode = memo(({ data }) => {
     const { name, columns } = data;
@@ -67,29 +51,24 @@ const edgeTypes = {
     buttonedge: ButtonEdge,
 };
 
-export const MOCK_TABLES = generateMockTables(5);
+// const initialEdges = [
+//     {
+//         id: uuidv4(),
+//         source: initialNodes[0].id,
+//         target: initialNodes[1].id,
+//         type: 'buttonedge',
+//         sourceHandle: `source-${initialNodes[0].data.columns[0].id}`,
+//         targetHandle: `target-${initialNodes[1].data.columns[1].id}`,
+//     },
+// ];
 
-const initialNodes = generateMockTables(5).map(({ id, name, columns }) => ({
-    id,
-    data: { name, columns },
-    position: { x: random(0, 1200), y: random(0, 500) },
-    type: 'tableNode',
-}));
+const ModelErd = ({ modelId }) => {
+    const { data: tables, isLoading: isTablesLoading } =
+        useTablesQuery(modelId);
 
-const initialEdges = [
-    {
-        id: uuidv4(),
-        source: initialNodes[0].id,
-        target: initialNodes[1].id,
-        type: 'buttonedge',
-        sourceHandle: `source-${initialNodes[0].data.columns[0].id}`,
-        targetHandle: `target-${initialNodes[1].data.columns[1].id}`,
-    },
-];
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-const ModelErd = ({ id }) => {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const onConnect = useCallback(
         (params) =>
             setEdges((eds) =>
@@ -98,22 +77,53 @@ const ModelErd = ({ id }) => {
         []
     );
 
+    useEffect(() => {
+        if (!tables) return;
+
+        const { nodes, nodesToBatchUpdatePositions } = tables.reduce(
+            (acc, curr) => {
+                curr.type = 'tableNode';
+                curr.data = { name: curr.name, columns: curr.columns };
+                if (!curr.position) {
+                    curr.position = { x: random(0, 1200), y: random(0, 500) };
+                    acc.nodesToBatchUpdatePositions.push(curr);
+                }
+                acc.nodes.push(curr);
+
+                return acc;
+            },
+            {
+                nodes: [],
+                nodesToBatchUpdatePositions: [],
+            }
+        );
+
+        setNodes(nodes);
+    }, [tables]);
+
     return (
         <div style={{ height: '100%' }}>
-            <ReactFlowProvider>
-                <ReactFlow
-                    nodes={nodes}
-                    onNodesChange={onNodesChange}
-                    edges={edges}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    nodeTypes={nodeTypes}
-                    edgeTypes={edgeTypes}
-                >
-                    <Background />
-                    <Controls />
-                </ReactFlow>
-            </ReactFlowProvider>
+            {isTablesLoading ? (
+                'Tables Loading'
+            ) : isEmpty(tables) ? (
+                'Empty State'
+            ) : (
+                <ReactFlowProvider>
+                    <ReactFlow
+                        id={modelId}
+                        nodes={nodes}
+                        onNodesChange={onNodesChange}
+                        edges={edges}
+                        onEdgesChange={onEdgesChange}
+                        onConnect={onConnect}
+                        nodeTypes={nodeTypes}
+                        edgeTypes={edgeTypes}
+                    >
+                        <Background />
+                        <Controls />
+                    </ReactFlow>
+                </ReactFlowProvider>
+            )}
         </div>
     );
 };

@@ -23,10 +23,11 @@ import {
     useModelsQuery,
 } from '../hooks/models.hooks';
 import ModelTabPanel from './ModelTabPanel';
+import {size} from "lodash";
+
 
 export default function App() {
     const {
-        isLoading: isModelsLoading,
         isInitialLoading,
         data: models,
     } = useModelsQuery();
@@ -51,18 +52,13 @@ export default function App() {
         [closeModelNameTooltip, createNewModel]
     );
 
-    useEffect(() => {
-        if (!isInitialLoading) {
-            setActiveTab(models[0].id);
-        }
-    }, [isInitialLoading, models]);
 
     useEffect(() => {
-        if (isModelsLoading && prevModelsState.current?.length < models?.length) {
+        if (size(prevModelsState.current) < size(models)) {
             setActiveTab(models[models.length - 1].id);
         }
         prevModelsState.current = models;
-    }, [isModelsLoading, models]);
+    }, [models]);
 
 
     const curryEditModelName = (id) => (name) => {
