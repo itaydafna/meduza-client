@@ -5,8 +5,6 @@ const FIRST_MODEL_ID = `${uuidv4()}`;
 
 //DATA BASE:
 
-
-
 let MODELS = [{ name: 'Model One', id: FIRST_MODEL_ID }];
 
 // TABLE:
@@ -22,9 +20,7 @@ let MODELS = [{ name: 'Model One', id: FIRST_MODEL_ID }];
 //     type: 'Number' | 'String' | 'Date',
 //     aggregationFunc: 'SUM' | 'AVG | 'MAX' | 'MIN'
 
-
 let TABLES = generateMockTables(5);
-
 
 // FUSION:
 //         id: uuid (String),
@@ -34,8 +30,7 @@ let TABLES = generateMockTables(5);
 //         targetTable: uuid (String),
 //         sourceColumn: uuid (String,
 //         targetColumn: uuid (String
-let FUSIONS = []
-
+let FUSIONS = [];
 
 // MODELS API
 
@@ -74,7 +69,6 @@ export function fetchTables(modelId) {
     });
 }
 
-
 export function createTable(newTable) {
     return new Promise((resolve) => {
         TABLES.push(newTable);
@@ -84,8 +78,33 @@ export function createTable(newTable) {
     });
 }
 
+export function updateTable(tableToUpdate) {
+    return new Promise((resolve) => {
+        TABLES = TABLES.map((table) =>
+            table.id === tableToUpdate.id ? tableToUpdate : table
+        );
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
+export function batchUpdateTables(tablesToUpdate) {
+    return new Promise((resolve) => {
+        tablesToUpdate.forEach((tableToUpdate) => {
+            TABLES = TABLES.map((table) =>
+                table.id === tableToUpdate.id ? tableToUpdate : table
+            );
+        });
+
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
 // FUSIONS API
-export function fetchFusions(modelId){
+export function fetchFusions(modelId) {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(FUSIONS.filter((fusion) => fusion.modelId === modelId));
@@ -102,9 +121,6 @@ export function createFusion(newFusion) {
     });
 }
 
-
-
-
 //utils
 
 function generateMockTables(num) {
@@ -118,7 +134,7 @@ function generateMockTables(num) {
                 id: `${uuidv4()}`,
                 name: `Column ${idx + 1} (${tableName})`,
                 type: 'Number',
-                aggregationFunc: 'SUM'
+                aggregationFunc: 'SUM',
             })),
         };
         return table;

@@ -14,13 +14,20 @@ import { styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { random } from 'lodash/fp';
 import ButtonEdge from './ButtonEdge';
-import { useTablesQuery } from '../../hooks/tables.hooks';
-import { isEmpty } from 'lodash';
+import {
+    useTablesQuery,
+    useUpdateTableMutation,
+} from '../../hooks/tables.hooks';
+import { isEmpty, noop } from 'lodash';
 import {
     useCreateFusionMutation,
     useFusionsQuery,
 } from '../../hooks/fusions.hooks';
 import { JOIN_TYPE } from '../../constants/entity.constants';
+import {
+    transformNodeToTable,
+    transformTableToNode,
+} from '../../utils/entities.utils';
 
 const TableNode = memo(({ data }) => {
     const { name, columns } = data;
@@ -80,7 +87,7 @@ const ModelErd = ({ modelId }) => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     const onConnect = useCallback(
-        (params,...rest) => {
+        (params, ...rest) => {
             setEdges((eds) =>
                 addEdge({ ...params, type: 'buttonedge', selected: true }, eds)
             );
@@ -101,24 +108,19 @@ const ModelErd = ({ modelId }) => {
     useEffect(() => {
         if (!tables) return;
 
-        const { nodes, nodesToBatchUpdate } = tables.reduce(
-            (acc, curr) => {
-                curr.type = 'tableNode';
-                curr.data = { name: curr.name, columns: curr.columns };
-                if (!curr.nodePosition) {
-                    curr.position = { x: random(0, 1200), y: random(0, 500) };
-                    curr.nodePosition = curr.position;
-                    acc.nodesToBatchUpdatePositions.push(curr);
-                } else {
-                    curr.position = curr.nodePosition;
+        const { nodes, tablesToBatchUpdate } = tables.reduce(
+            (acc, table) => {
+                const node = transformTableToNode(table);
+                if (!table.nodePosition) {
+                    table.nodePosition = node.position;
+                    acc.tablesToBatchUpdate.push(table);
                 }
-                acc.nodes.push(curr);
-
+                acc.nodes.push(node);
                 return acc;
             },
             {
                 nodes: [],
-                nodesToBatchUpdatePositions: [],
+                tablesToBatchUpdate: [],
             }
         );
 
@@ -136,13 +138,23 @@ const ModelErd = ({ modelId }) => {
                 sourceHandle: sourceColumn,
                 targetHandle: targetColumn,
                 data: {
-                    id
-                }
+                    id,
+                },
             })
         );
 
         setEdges(edges);
-    }, [fusions]);
+    }, [fusions, setEdges]);
+
+    const { mutate: updateTable } = useUpdateTableMutation(modelId);
+
+    const onNodeDragStop = useCallback(
+        (_, node) => {
+            const table = transformNodeToTable(node, modelId);
+            updateTable(table);
+        },
+        [modelId, updateTable]
+    );
 
     return (
         <div style={{ height: '100%' }}>
@@ -161,6 +173,8 @@ const ModelErd = ({ modelId }) => {
                         onConnect={onConnect}
                         nodeTypes={nodeTypes}
                         edgeTypes={edgeTypes}
+                        onNodeDragStart={noop}
+                        onNodeDragStop={onNodeDragStop}
                     >
                         <Background />
                         <Controls />
