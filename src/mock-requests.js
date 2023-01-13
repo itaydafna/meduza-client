@@ -4,9 +4,40 @@ import { random } from 'lodash/fp';
 const FIRST_MODEL_ID = `${uuidv4()}`;
 
 //DATA BASE:
+
+
+
 let MODELS = [{ name: 'Model One', id: FIRST_MODEL_ID }];
 
+// TABLE:
+//     id: uuid (String),
+//     name: String,
+//     modelId: uuid (String),
+//     columns: COLUMN[]
+//     nodePosition: null |  {x: number, y: number}
+
+// COLUMNS:
+//     id: uuid (String),
+//     name: String,
+//     type: 'Number' | 'String' | 'Date',
+//     aggregationFunc: 'SUM' | 'AVG | 'MAX' | 'MIN'
+
+
 let TABLES = generateMockTables(5);
+
+
+// FUSION:
+//         id: uuid (String),
+//         type: INNER | LEFT | RIGHT
+//         modelId: uuid (String)
+//         sourceTable: uuid (String),
+//         targetTable: uuid (String),
+//         sourceColumn: uuid (String,
+//         targetColumn: uuid (String
+let FUSIONS = []
+
+
+// MODELS API
 
 export function fetchModels() {
     return new Promise((resolve) => {
@@ -34,7 +65,8 @@ export function deleteModel(id) {
     });
 }
 
-export function fetchModelTables(modelId) {
+// TABLES API
+export function fetchTables(modelId) {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(TABLES.filter((table) => table.modelId === modelId));
@@ -52,6 +84,25 @@ export function createTable(newTable) {
     });
 }
 
+// FUSIONS API
+export function fetchFusions(modelId){
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(FUSIONS.filter((fusion) => fusion.modelId === modelId));
+        }, 1000);
+    });
+}
+
+export function createFusion(newFusion) {
+    return new Promise((resolve) => {
+        FUSIONS.push(newFusion);
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
+
 
 
 //utils
@@ -66,6 +117,8 @@ function generateMockTables(num) {
             columns: Array.from({ length: random(3, 7) }).map((_, idx) => ({
                 id: `${uuidv4()}`,
                 name: `Column ${idx + 1} (${tableName})`,
+                type: 'Number',
+                aggregationFunc: 'SUM'
             })),
         };
         return table;

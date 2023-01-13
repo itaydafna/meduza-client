@@ -24,7 +24,10 @@ export default function ButtonEdge({
     style = {},
     markerEnd,
     selected,
+    data,
+    ...rest
 }) {
+    console.log({id, data, rest})
     const [edgePath, labelX, labelY] = getBezierPath({
         sourceX,
         sourceY,
