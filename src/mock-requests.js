@@ -121,6 +121,17 @@ export function createFusion(newFusion) {
     });
 }
 
+export function updateFusion(fusionToUpdate) {
+    return new Promise((resolve) => {
+        FUSIONS = FUSIONS.map((fusion) =>
+            fusionToUpdate.id === fusion.id ? fusionToUpdate : fusion
+        );
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
 //utils
 
 function generateMockTables(num) {

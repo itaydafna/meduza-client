@@ -9,10 +9,9 @@ import ReactFlow, {
     ReactFlowProvider,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useCallback, useMemo, useState, memo, useEffect } from 'react';
+import { useCallback, memo, useEffect } from 'react';
 import { styled } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { random } from 'lodash/fp';
 import ButtonEdge from './ButtonEdge';
 import {
     useTablesQuery,
@@ -40,13 +39,13 @@ const TableNode = memo(({ data }) => {
                         <StyledTargetHandle
                             type="target"
                             position="left"
-                            id={`target-${id}`}
+                            id={id}
                         />
                         {name}
                         <StyledSourceHandle
                             type="source"
                             position="right"
-                            id={`source-${id}`}
+                            id={id}
                         />
                     </ColumnRow>
                 ))}
@@ -62,17 +61,6 @@ const nodeTypes = {
 const edgeTypes = {
     buttonedge: ButtonEdge,
 };
-
-// const initialEdges = [
-//     {
-//         id: uuidv4(),
-//         source: initialNodes[0].id,
-//         target: initialNodes[1].id,
-//         type: 'buttonedge',
-//         sourceHandle: `source-${initialNodes[0].data.columns[0].id}`,
-//         targetHandle: `target-${initialNodes[1].data.columns[1].id}`,
-//     },
-// ];
 
 const ModelErd = ({ modelId }) => {
     const { data: tables, isLoading: isTablesLoading } =
@@ -108,7 +96,7 @@ const ModelErd = ({ modelId }) => {
     useEffect(() => {
         if (!tables) return;
 
-        const { nodes, tablesToBatchUpdate } = tables.reduce(
+        const { nodes } = tables.reduce(
             (acc, table) => {
                 const node = transformTableToNode(table);
                 if (!table.nodePosition) {
@@ -142,7 +130,6 @@ const ModelErd = ({ modelId }) => {
                 },
             })
         );
-
         setEdges(edges);
     }, [fusions, setEdges]);
 

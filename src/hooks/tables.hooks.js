@@ -9,6 +9,13 @@ export const useTablesQuery = (modelId) => {
     return query;
 };
 
+export const useTable = (modelId, tableId) =>{
+    const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
+        fetchTables(modelId), {select: (tables)=> tables.find(table=>table.id === tableId)}
+    );
+    return query;
+}
+
 export const useCreateTableMutation = (modelId) => {
     const queryClient = useQueryClient();
     const mutation = useMutation({

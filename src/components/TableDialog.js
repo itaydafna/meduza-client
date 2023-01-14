@@ -12,11 +12,11 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     AGGREGATION_FUNCTION,
     COLUMN_TYPE,
-} from '../../constants/entity.constants';
-import { ModelContext } from '../ModelTabPanel';
+} from '../constants/entity.constants';
+import { ModelContext } from './ModelTabPanel';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useCreateTableMutation } from '../../hooks/tables.hooks';
+import { useCreateTableMutation } from '../hooks/tables.hooks';
 
 const TableDialog = ({ isOpen, handleClose, id, name = '', columns = [] }) => {
     const [tableName, setTableName] = useState(name);

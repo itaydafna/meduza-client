@@ -3,10 +3,8 @@ import { Fab, styled } from '@mui/material';
 import { TabPanel } from '@mui/lab';
 import TableChartSharpIcon from '@mui/icons-material/TableChartSharp';
 import ModelErd from './model-erd/ModelErd';
-import { useCreateTableMutation } from '../hooks/tables.hooks';
-import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
-import TableDialog from './table-form/TableDialog';
+import TableDialog from './TableDialog';
 
 export const ModelContext = React.createContext();
 
@@ -14,28 +12,6 @@ const ModelTabPanel = ({ model }) => {
     const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
     const toggleDialog = () => setIsTableDialogOpen((isOpen) => !isOpen);
     const closeDialog = () => setIsTableDialogOpen(false);
-
-    const { mutate: createTable } = useCreateTableMutation(model.id);
-    const fastCreate = () =>
-        createTable({
-            id: uuidv4(),
-            name: 'Magic Table',
-            modelId: model.id,
-            columns: [
-                {
-                    name: 'fun',
-                    id: uuidv4(),
-                },
-                {
-                    name: 'Love',
-                    id: uuidv4(),
-                },
-                {
-                    name: 'freedom',
-                    id: uuidv4(),
-                },
-            ],
-        });
 
     return (
         <ModelContext.Provider value={model.id}>
