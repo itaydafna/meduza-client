@@ -5,13 +5,12 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import {
     ClickAwayListener,
-    Fab,
     IconButton,
     styled,
     Tab,
     Tabs,
 } from '@mui/material';
-import { TabContext, TabPanel } from '@mui/lab';
+import { TabContext } from '@mui/lab';
 import TabLabel from './TabLabel';
 import AddIcon from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
@@ -35,7 +34,7 @@ export default function App() {
     const {mutate: deleteModelMutation} = useDeleteModeMutation();
 
     const [activeTab, setActiveTab] = useState(null);
-    const prevModelsState = useRef(models);
+    const prevModelsSize = useRef(size(models));
 
     const {
         isModelNameTooltipOpen,
@@ -54,10 +53,14 @@ export default function App() {
 
 
     useEffect(() => {
-        if (size(prevModelsState.current) < size(models)) {
+        if (prevModelsSize.current < size(models)) {
             setActiveTab(models[models.length - 1].id);
         }
-        prevModelsState.current = models;
+        if(prevModelsSize.current !== size(models)){
+        prevModelsSize.current = size(models);
+
+        }
+
     }, [models]);
 
 
@@ -91,7 +94,7 @@ export default function App() {
             deleteModelMutation(id);
             setActiveTab(nextActiveTab);
         },
-        [activeTab, models]
+        [activeTab, deleteModelMutation, models]
     );
 
     return (
@@ -103,7 +106,7 @@ export default function App() {
                         component="div"
                         sx={{ flexGrow: 1 }}
                     >
-                        My App
+                        MEDUZA
                     </Typography>
                 </Toolbar>
             </AppBar>

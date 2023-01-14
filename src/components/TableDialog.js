@@ -18,20 +18,9 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useCreateTableMutation } from '../hooks/tables.hooks';
 
-const TableDialog = ({ isOpen, handleClose, id, name = '', columns = [] }) => {
+const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
     const [tableName, setTableName] = useState(name);
-    const [rows, setRows] = useState(
-        isEmpty(columns)
-            ? [
-                  {
-                      id: `${uuidv4()}`,
-                      name: '',
-                      type: COLUMN_TYPE.STRING,
-                      aggregationFunction: null,
-                  },
-              ]
-            : columns
-    );
+    const [rows, setRows] = useState(isEmpty(columns) ? [] : columns);
 
     const modelId = useContext(ModelContext);
 
