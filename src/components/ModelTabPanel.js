@@ -5,10 +5,17 @@ import TableChartSharpIcon from '@mui/icons-material/TableChartSharp';
 import ModelErd from './model-erd/ModelErd';
 import { useCreateTableMutation } from '../hooks/tables.hooks';
 import { v4 as uuidv4 } from 'uuid';
+import { useState } from 'react';
+import TableDialog from './table-form/TableDialog';
+
+export const ModelContext = React.createContext();
 
 const ModelTabPanel = ({ model }) => {
-    const { mutate: createTable } = useCreateTableMutation(model.id);
+    const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
+    const toggleDialog = () => setIsTableDialogOpen((isOpen) => !isOpen);
+    const closeDialog = () => setIsTableDialogOpen(false);
 
+    const { mutate: createTable } = useCreateTableMutation(model.id);
     const fastCreate = () =>
         createTable({
             id: uuidv4(),
@@ -31,16 +38,26 @@ const ModelTabPanel = ({ model }) => {
         });
 
     return (
-        <StyledTabPanel key={model.id} value={model.id} index={model.id}>
-            <FlexWrapper>
-                <ModelErd modelId={model.id} />
-                <BottomActionButtons>
-                    <Fab color="primary" aria-label="add" onClick={fastCreate}>
-                        <TableChartSharpIcon />
-                    </Fab>
-                </BottomActionButtons>
-            </FlexWrapper>
-        </StyledTabPanel>
+        <ModelContext.Provider value={model.id}>
+            <StyledTabPanel key={model.id} value={model.id} index={model.id}>
+                <FlexWrapper>
+                    <ModelErd modelId={model.id} />
+                    <BottomActionButtons>
+                        <Fab
+                            color="primary"
+                            aria-label="add"
+                            onClick={toggleDialog}
+                        >
+                            <TableChartSharpIcon />
+                        </Fab>
+                    </BottomActionButtons>
+                </FlexWrapper>
+                <TableDialog
+                    isOpen={isTableDialogOpen}
+                    handleClose={closeDialog}
+                />
+            </StyledTabPanel>
+        </ModelContext.Provider>
     );
 };
 

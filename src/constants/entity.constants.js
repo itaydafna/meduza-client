@@ -4,10 +4,17 @@ export const JOIN_TYPE = {
     RIGHT: 'RIGHT'
 }
 
+export const COLUMN_TYPE = {
+    NUMBER: 'NUMBER',
+    STRING: 'STRING',
+    DATE: 'DATE'
+}
+
 
 export const AGGREGATION_FUNCTION = {
     AVERAGE: 'AVERAGE',
     SUM: 'SUM',
     MIN: 'MIN',
-    MAX: 'MAX'
+    MAX: 'MAX',
+    NONE: 'NONE'
 }

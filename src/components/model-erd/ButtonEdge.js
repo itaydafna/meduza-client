@@ -25,9 +25,7 @@ export default function ButtonEdge({
     markerEnd,
     selected,
     data,
-    ...rest
 }) {
-    console.log({id, data, rest})
     const [edgePath, labelX, labelY] = getBezierPath({
         sourceX,
         sourceY,
@@ -35,7 +33,7 @@ export default function ButtonEdge({
         targetX,
         targetY,
         targetPosition,
-    });
+        });
 
     const [isFusionPopperOpen, setIsFusionPopperOpen] = useState(false);
 
