@@ -2,11 +2,12 @@ import * as React from 'react';
 import { styled } from '@mui/material';
 import { TabPanel } from '@mui/lab';
 import ModelErd from './model-erd/ModelErd';
-import { useContext} from 'react';
+import { useContext } from 'react';
 import { ModelContext } from '../App';
 import { isEmpty } from 'lodash';
 import { useTablesQuery } from '../../hooks/tables.hooks';
 import { useFusionsQuery } from '../../hooks/fusions.hooks';
+import NewModelLandingPage from './NewModelLandingPage';
 
 const ModelConfigurationMain = () => {
     const modelId = useContext(ModelContext);
@@ -20,7 +21,7 @@ const ModelConfigurationMain = () => {
             {isTablesLoading || isFusionsLoading ? (
                 'Tables Loading'
             ) : isEmpty(tables) ? (
-                'Empty State'
+                <NewModelLandingPage />
             ) : (
                 <ModelErd />
             )}
