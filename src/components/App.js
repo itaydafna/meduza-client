@@ -23,32 +23,14 @@ import {
     useModelsQuery,
 } from '../hooks/models.hooks';
 import ModelTabPanel from './ModelTabPanel';
-import { size } from 'lodash';
 import meduzaMain from '../assets/meduza-main.png';
+import ModelTabs from "./ModelTabs";
+import {size} from "lodash";
 
 export default function App() {
     const { isInitialLoading, data: models } = useModelsQuery();
-    const { mutate: createNewModel } = useCreateModelMutation();
-    const { mutate: deleteModelMutation } = useDeleteModeMutation();
-
     const [activeTab, setActiveTab] = useState(null);
     const prevModelsSize = useRef(size(models));
-
-    const {
-        isModelNameTooltipOpen,
-        openModelNameTooltip,
-        closeModelNameTooltip,
-    } = useModelNameTooltip();
-
-    const addNewModel = useCallback(
-        (name) => {
-            const id = `${uuidv4()}`;
-            createNewModel({ id, name });
-            closeModelNameTooltip();
-        },
-        [closeModelNameTooltip, createNewModel]
-    );
-
     useEffect(() => {
         if (prevModelsSize.current < size(models)) {
             setActiveTab(models[models.length - 1].id);
@@ -56,41 +38,7 @@ export default function App() {
         if (prevModelsSize.current !== size(models)) {
             prevModelsSize.current = size(models);
         }
-    }, [models]);
-
-    const curryEditModelName = (id) => (name) => {
-        // setModels(
-        //     models.map((model) =>
-        //         model.id === id
-        //             ? {
-        //                   id,
-        //                   name,
-        //               }
-        //             : model
-        //     )
-        // );
-    };
-
-    const deleteModel = useCallback(
-        (id) => {
-            const deletedIdx = models.findIndex((model) => model.id === id);
-            let nextActiveTab;
-            if (models[deletedIdx].id !== activeTab) {
-                nextActiveTab = activeTab;
-            } else if (!!models[deletedIdx + 1]) {
-                nextActiveTab = models[deletedIdx + 1].id;
-            } else if (!!models[deletedIdx - 1]) {
-                nextActiveTab = models[deletedIdx - 1].id;
-            } else {
-                nextActiveTab = models[0].id;
-            }
-
-            deleteModelMutation(id);
-            setActiveTab(nextActiveTab);
-        },
-        [activeTab, deleteModelMutation, models]
-    );
-
+    }, [models, setActiveTab]);
     return (
         <AppContainer>
             <AppBar position="static">
@@ -108,64 +56,9 @@ export default function App() {
                     </div>
                 </Toolbar>
             </AppBar>
-            {isInitialLoading || !activeTab ? (
-                'LOADING...'
-            ) : (
+            {(isInitialLoading || !activeTab) ? null : (
                 <TabContext value={activeTab}>
-                    <Box
-                        sx={{
-                            borderBottom: 1,
-                            borderColor: 'divider',
-                            display: 'flex',
-                        }}
-                    >
-                        <Tabs
-                            value={activeTab}
-                            onChange={(_, val) => setActiveTab(val)}
-                            aria-label="basic tabs example"
-                        >
-                            {models.map((model) => (
-                                <Tab
-                                    key={model.id}
-                                    label={
-                                        <TabLabel
-                                            label={model.name}
-                                            onDelete={() =>
-                                                deleteModel(model.id)
-                                            }
-                                            onEdit={curryEditModelName(
-                                                model.id
-                                            )}
-                                        />
-                                    }
-                                    value={model.id}
-                                />
-                            ))}
-                        </Tabs>
-                        <ClickAwayListener onClickAway={closeModelNameTooltip}>
-                            <span>
-                                <ModelNameTooltip
-                                    closeModelNameTooltip={
-                                        closeModelNameTooltip
-                                    }
-                                    onSubmit={addNewModel}
-                                    isModelNameTooltipOpen={
-                                        isModelNameTooltipOpen
-                                    }
-                                    isNew={true}
-                                    initialValue={`Model ${models.length + 1}`}
-                                >
-                                    <IconButton
-                                        color="primary"
-                                        aria-label="add"
-                                        onClick={openModelNameTooltip}
-                                    >
-                                        <AddIcon />
-                                    </IconButton>
-                                </ModelNameTooltip>
-                            </span>
-                        </ClickAwayListener>
-                    </Box>
+                    <ModelTabs setActiveTab={setActiveTab}/>
                     {models.map((model) => (
                         <ModelTabPanel
                             id={model.id}
