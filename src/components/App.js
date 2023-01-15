@@ -17,21 +17,19 @@ import { v4 as uuidv4 } from 'uuid';
 import { useCallback, useState, useEffect, useRef } from 'react';
 import ModelNameTooltip from './ModelNameTooltip';
 import {
-    useCreateModelMutation, useDeleteModeMutation,
+    useCreateModelMutation,
+    useDeleteModeMutation,
     useModelNameTooltip,
     useModelsQuery,
 } from '../hooks/models.hooks';
 import ModelTabPanel from './ModelTabPanel';
-import {size} from "lodash";
-
+import { size } from 'lodash';
+import meduzaMain from '../assets/meduza-main.png';
 
 export default function App() {
-    const {
-        isInitialLoading,
-        data: models,
-    } = useModelsQuery();
+    const { isInitialLoading, data: models } = useModelsQuery();
     const { mutate: createNewModel } = useCreateModelMutation();
-    const {mutate: deleteModelMutation} = useDeleteModeMutation();
+    const { mutate: deleteModelMutation } = useDeleteModeMutation();
 
     const [activeTab, setActiveTab] = useState(null);
     const prevModelsSize = useRef(size(models));
@@ -51,18 +49,14 @@ export default function App() {
         [closeModelNameTooltip, createNewModel]
     );
 
-
     useEffect(() => {
         if (prevModelsSize.current < size(models)) {
             setActiveTab(models[models.length - 1].id);
         }
-        if(prevModelsSize.current !== size(models)){
-        prevModelsSize.current = size(models);
-
+        if (prevModelsSize.current !== size(models)) {
+            prevModelsSize.current = size(models);
         }
-
     }, [models]);
-
 
     const curryEditModelName = (id) => (name) => {
         // setModels(
@@ -101,13 +95,17 @@ export default function App() {
         <AppContainer>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography
-                        variant="h6"
-                        component="div"
-                        sx={{ flexGrow: 1 }}
-                    >
-                        MEDUZA
-                    </Typography>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <img height={50} src={meduzaMain} alt="" style={{marginRight: 10}} />
+                        <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{ flexGrow: 1 }}
+                        >
+                            MEDUZA
+                        </Typography>
+
+                    </div>
                 </Toolbar>
             </AppBar>
             {isInitialLoading || !activeTab ? (

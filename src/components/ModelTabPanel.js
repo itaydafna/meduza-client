@@ -5,13 +5,20 @@ import TableChartSharpIcon from '@mui/icons-material/TableChartSharp';
 import ModelErd from './model-erd/ModelErd';
 import { useState } from 'react';
 import TableDialog from './TableDialog';
+import QueryBuilderDialog from "./query-builder/QueryBuilderDialog";
+
 
 export const ModelContext = React.createContext();
 
 const ModelTabPanel = ({ model }) => {
     const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
-    const toggleDialog = () => setIsTableDialogOpen((isOpen) => !isOpen);
-    const closeDialog = () => setIsTableDialogOpen(false);
+    const [isBuilderDialogOpen, setIsBuilderDialogOpen] = useState(false);
+    const toggleTableDialog = () => setIsTableDialogOpen((isOpen) => !isOpen);
+    const closeTableDialog = () => setIsTableDialogOpen(false);
+
+    const toggleBuilderDialog = () => setIsBuilderDialogOpen((isOpen) => !isOpen);
+    const closeBuilderDialog = () => setIsBuilderDialogOpen(false);
+
 
     return (
         <ModelContext.Provider value={model.id}>
@@ -22,15 +29,26 @@ const ModelTabPanel = ({ model }) => {
                         <Fab
                             color="primary"
                             aria-label="add"
-                            onClick={toggleDialog}
+                            onClick={toggleTableDialog}
                         >
                             <TableChartSharpIcon />
+                        </Fab>
+                        <Fab
+                            color="primary"
+                            aria-label="add"
+                            onClick={toggleBuilderDialog}
+                        >
+                            Create Query
                         </Fab>
                     </BottomActionButtons>
                 </FlexWrapper>
                 <TableDialog
                     isOpen={isTableDialogOpen}
-                    handleClose={closeDialog}
+                    handleClose={closeTableDialog}
+                />
+                <QueryBuilderDialog
+                    isOpen={isBuilderDialogOpen}
+                    handleClose={closeBuilderDialog}
                 />
             </StyledTabPanel>
         </ModelContext.Provider>

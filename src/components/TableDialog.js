@@ -69,6 +69,7 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
                 headerName: 'Column Name',
                 type: 'string',
                 editable: true,
+                width: 200
             },
             {
                 field: 'type',
@@ -76,6 +77,7 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
                 type: 'singleSelect',
                 editable: true,
                 valueOptions: keys(COLUMN_TYPE),
+                width: 200
             },
             {
                 field: 'aggregationFunction',
@@ -83,11 +85,12 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
                 type: 'singleSelect',
                 editable: true,
                 valueOptions: keys(AGGREGATION_FUNCTION),
+                width: 200
             },
             {
                 field: 'actions',
                 type: 'actions',
-                width: 80,
+                width: 50,
                 getActions: (params) => [
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
