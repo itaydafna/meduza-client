@@ -9,7 +9,7 @@ import {
     useDeleteModeMutation,
     useModelNameTooltip,
     useModelsQuery,
-} from '../hooks/models.hooks';
+} from '../../hooks/models.hooks';
 import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useTabContext } from '@mui/lab';

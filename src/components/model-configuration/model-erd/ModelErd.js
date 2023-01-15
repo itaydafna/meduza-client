@@ -3,56 +3,35 @@ import ReactFlow, {
     Background,
     Controls,
     addEdge,
-    Handle,
     useNodesState,
     useEdgesState,
     ReactFlowProvider,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useCallback, memo, useEffect } from 'react';
-import { styled } from '@mui/material';
+import { useCallback, useEffect, useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ButtonEdge from './ButtonEdge';
 import {
     useTablesQuery,
     useUpdateTableMutation,
-} from '../../hooks/tables.hooks';
-import { isEmpty, noop } from 'lodash';
+} from '../../../hooks/tables.hooks';
+import { noop } from 'lodash';
 import {
     useCreateFusionMutation,
     useFusionsQuery,
-} from '../../hooks/fusions.hooks';
-import { JOIN_TYPE } from '../../constants/entity.constants';
+} from '../../../hooks/fusions.hooks';
+import { JOIN_TYPE } from '../../../constants/entity.constants';
 import {
     transformNodeToTable,
     transformTableToNode,
-} from '../../utils/entities.utils';
+} from '../../../utils/entities.utils';
+import { ModelContext } from '../../App';
 
-const TableNode = memo(({ data }) => {
-    const { name, columns } = data;
-    return (
-        <TableNodeContainer>
-            <div>{name}</div>
-            <TableBody>
-                {columns.map(({ id, name }) => (
-                    <ColumnRow key={id}>
-                        <StyledTargetHandle
-                            type="target"
-                            position="left"
-                            id={id}
-                        />
-                        {name}
-                        <StyledSourceHandle
-                            type="source"
-                            position="right"
-                            id={id}
-                        />
-                    </ColumnRow>
-                ))}
-            </TableBody>
-        </TableNodeContainer>
-    );
-});
+import TableNode from './TableNode';
+import { Fab, styled } from '@mui/material';
+import TableChartSharpIcon from '@mui/icons-material/TableChartSharp';
+import TableDialog from '../TableDialog';
+import QueryBuilderDialog from '../../query-builder/QueryBuilderDialog';
 
 const nodeTypes = {
     tableNode: TableNode,
@@ -62,12 +41,20 @@ const edgeTypes = {
     buttonedge: ButtonEdge,
 };
 
-const ModelErd = ({ modelId }) => {
-    const { data: tables, isLoading: isTablesLoading } =
-        useTablesQuery(modelId);
+const ModelErd = () => {
+    const modelId = useContext(ModelContext);
+    const { data: tables } = useTablesQuery(modelId);
 
-    const { data: fusions, isLoading: isFusionsLoading } =
-        useFusionsQuery(modelId);
+    const { data: fusions } = useFusionsQuery(modelId);
+
+    const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
+    const [isBuilderDialogOpen, setIsBuilderDialogOpen] = useState(false);
+    const toggleTableDialog = () => setIsTableDialogOpen((isOpen) => !isOpen);
+    const closeTableDialog = () => setIsTableDialogOpen(false);
+
+    const toggleBuilderDialog = () =>
+        setIsBuilderDialogOpen((isOpen) => !isOpen);
+    const closeBuilderDialog = () => setIsBuilderDialogOpen(false);
 
     const { mutate: createFusion } = useCreateFusionMutation(modelId);
 
@@ -145,12 +132,8 @@ const ModelErd = ({ modelId }) => {
 
     return (
         <div style={{ height: '100%' }}>
-            {isTablesLoading || isFusionsLoading ? (
-                'Tables Loading'
-            ) : isEmpty(tables) ? (
-                'Empty State'
-            ) : (
-                <ReactFlowProvider>
+            <ReactFlowProvider>
+                <FlexWrapper>
                     <ReactFlow
                         id={modelId}
                         nodes={nodes}
@@ -166,38 +149,44 @@ const ModelErd = ({ modelId }) => {
                         <Background />
                         <Controls />
                     </ReactFlow>
-                </ReactFlowProvider>
-            )}
+                    <BottomActionButtons>
+                        <Fab
+                            color="primary"
+                            aria-label="add"
+                            onClick={toggleTableDialog}
+                        >
+                            <TableChartSharpIcon />
+                        </Fab>
+                        <Fab
+                            color="primary"
+                            aria-label="add"
+                            onClick={toggleBuilderDialog}
+                        >
+                            Create Query
+                        </Fab>
+                    </BottomActionButtons>
+                </FlexWrapper>
+                <TableDialog
+                    isOpen={isTableDialogOpen}
+                    handleClose={closeTableDialog}
+                />
+                <QueryBuilderDialog
+                    isOpen={isBuilderDialogOpen}
+                    handleClose={closeBuilderDialog}
+                />
+            </ReactFlowProvider>
         </div>
     );
 };
 
-export default ModelErd;
-
-const TableNodeContainer = styled('div')`
+const FlexWrapper = styled('div')`
     display: flex;
     flex-direction: column;
-    background: white;
-    box-sizing: border-box;
-    border: 1px solid gray;
-    padding: 5px;
-    border-radius: 5px;
+    height: 100%;
 `;
 
-const TableBody = styled('div')``;
-
-const ColumnRow = styled('div')`
-    position: relative;
-    padding: 5px 10px;
-    //width: 1000px;
+const BottomActionButtons = styled('div')`
+    margin-top: auto;
 `;
 
-const StyledTargetHandle = styled(Handle)`
-    background: red;
-    position: absolute;
-`;
-
-const StyledSourceHandle = styled(Handle)`
-    background: blue;
-    position: absolute;
-`;
+export default ModelErd;

@@ -1,10 +1,10 @@
-import { useFusion, useUpdateFusionMutation } from '../hooks/fusions.hooks';
-import { ModelContext } from './ModelTabPanel';
+import { useFusion, useUpdateFusionMutation } from '../../hooks/fusions.hooks';
+import { ModelContext } from '../App';
 import { useCallback, useContext, useState } from 'react';
-import { useTable } from '../hooks/tables.hooks';
+import { useTable } from '../../hooks/tables.hooks';
 import { Button, MenuItem, Select, styled } from '@mui/material';
 import { keys } from 'lodash';
-import { JOIN_TYPE } from '../constants/entity.constants';
+import { JOIN_TYPE } from '../../constants/entity.constants';
 
 const FusionForm = ({ fusionsId }) => {
     const modelId = useContext(ModelContext);

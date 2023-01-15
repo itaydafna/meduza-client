@@ -1,31 +1,17 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import {
-    ClickAwayListener,
-    IconButton,
-    styled,
-    Tab,
-    Tabs,
-} from '@mui/material';
+import { styled } from '@mui/material';
 import { TabContext } from '@mui/lab';
-import TabLabel from './TabLabel';
-import AddIcon from '@mui/icons-material/Add';
-import { v4 as uuidv4 } from 'uuid';
-import { useCallback, useState, useEffect, useRef } from 'react';
-import ModelNameTooltip from './ModelNameTooltip';
-import {
-    useCreateModelMutation,
-    useDeleteModeMutation,
-    useModelNameTooltip,
-    useModelsQuery,
-} from '../hooks/models.hooks';
-import ModelTabPanel from './ModelTabPanel';
+import { useState, useEffect, useRef } from 'react';
+import { useModelsQuery } from '../hooks/models.hooks';
+import ModelConfigurationMain from './model-configuration/ModelConfigurationMain';
 import meduzaMain from '../assets/meduza-main.png';
-import ModelTabs from "./ModelTabs";
-import {size} from "lodash";
+import ModelTabs from './model-tabs/ModelTabs';
+import { size } from 'lodash';
+
+export const ModelContext = React.createContext();
 
 export default function App() {
     const { isInitialLoading, data: models } = useModelsQuery();
@@ -43,8 +29,13 @@ export default function App() {
         <AppContainer>
             <AppBar position="static">
                 <Toolbar>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <img height={50} src={meduzaMain} alt="" style={{marginRight: 10}} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <img
+                            height={50}
+                            src={meduzaMain}
+                            alt=""
+                            style={{ marginRight: 10 }}
+                        />
                         <Typography
                             variant="h6"
                             component="div"
@@ -52,19 +43,16 @@ export default function App() {
                         >
                             MEDUZA
                         </Typography>
-
                     </div>
                 </Toolbar>
             </AppBar>
-            {(isInitialLoading || !activeTab) ? null : (
+            {isInitialLoading || !activeTab ? null : (
                 <TabContext value={activeTab}>
-                    <ModelTabs setActiveTab={setActiveTab}/>
+                    <ModelTabs setActiveTab={setActiveTab} />
                     {models.map((model) => (
-                        <ModelTabPanel
-                            id={model.id}
-                            key={model.id}
-                            model={model}
-                        />
+                        <ModelContext.Provider key={model.id} value={model.id}>
+                            <ModelConfigurationMain />
+                        </ModelContext.Provider>
                     ))}
                 </TabContext>
             )}

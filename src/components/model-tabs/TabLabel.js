@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { useState, useRef } from 'react';
 import Portal from '@mui/base/Portal';
 import ModelNameTooltip from './ModelNameTooltip';
-import { useModelNameTooltip } from '../hooks/models.hooks';
+import { useModelNameTooltip } from '../../hooks/models.hooks';
 import TableChartSharpIcon from '@mui/icons-material/TableChartSharp';
 
 const TabLabel = ({ label, onDelete, onEdit }) => {
