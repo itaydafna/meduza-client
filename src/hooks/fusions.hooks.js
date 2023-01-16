@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/query-keys.constants';
-import {
-    createFusion,
-    fetchFusions, updateFusion,
-} from '../mock-requests';
+import { createFusion, fetchFusions, updateFusion } from '../mock-requests';
+import {useEffect, useState} from 'react';
+import { isEmpty, set } from 'lodash/fp';
 
 export const useFusionsQuery = (modelId) => {
     const query = useQuery(QUERY_KEYS.FUSIONS(modelId), () =>
@@ -89,6 +88,28 @@ export const useUpdateFusionMutation = (modelId) => {
         },
     });
 
-
     return mutation;
+};
+
+export const useTableDependencies = (modelId) => {
+    const [tableDependencies, setTableDependencies] = useState({});
+    const { data: fusions } = useQuery(QUERY_KEYS.FUSIONS(modelId), () =>
+        fetchFusions(modelId)
+    );
+
+    useEffect(()=>{
+        if (!isEmpty(fusions)) {
+            setTableDependencies((prevDeps) => {
+                let deps = prevDeps;
+                fusions.forEach(({ sourceTable, targetTable }) => {
+                    deps = set([sourceTable, targetTable], true, deps);
+                    deps = set([targetTable, sourceTable], true, deps);
+                });
+                return deps;
+            });
+        }
+    },[fusions])
+
+
+    return {tableDependencies};
 };

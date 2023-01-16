@@ -12,6 +12,8 @@ import DbtImportButton from './DbtImportButton';
 import TableDialog from './TableDialog';
 import AddNewTable from './AddNewTable';
 
+import meduzaMain from '../../assets/meduza-main.png';
+
 const NewModelLandingPage = () => {
     const [isShowImportOptions, setIsShowImportOptions] = useState(false);
 
@@ -139,6 +141,11 @@ const NewModelLandingPage = () => {
                         </div>
                     </Stack>
                 </Actions>
+                {/*<motion.img src={meduzaMain} animate={{scale: [0.8,1, 0.8], transition: {*/}
+                {/*        repeat: Infinity,*/}
+                {/*        duration: 5*/}
+                {/*    }*/}
+                {/*}} />*/}
             </Content>
         </Container>
     );

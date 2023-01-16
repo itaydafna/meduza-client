@@ -2,9 +2,24 @@ import { useFusion, useUpdateFusionMutation } from '../../hooks/fusions.hooks';
 import { ModelContext } from '../App';
 import { useCallback, useContext, useState } from 'react';
 import { useTable } from '../../hooks/tables.hooks';
-import { Button, MenuItem, Select, styled } from '@mui/material';
+import {
+    Button,
+    FormControl, FormControlLabel, FormLabel,
+    IconButton,
+    MenuItem, Radio, RadioGroup,
+    Select,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { keys } from 'lodash';
 import { JOIN_TYPE } from '../../constants/entity.constants';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+
+import JoinInnerIcon from '@mui/icons-material/JoinInner';
+import JoinLeftIcon from '@mui/icons-material/JoinLeft';
+import JoinRightIcon from '@mui/icons-material/JoinRight';
+import JoinFullIcon from '@mui/icons-material/JoinFull';
 
 const FusionForm = ({ fusionsId }) => {
     const modelId = useContext(ModelContext);
@@ -53,44 +68,53 @@ const FusionForm = ({ fusionsId }) => {
 
     return (
         <Container>
-            <div>{`${sourceTable.name} : ${targetTable.name}`}</div>
-            <div style={{ display: 'flex' }}>
-                <Select
+            <FusionName>{`${sourceTable.name} : ${targetTable.name}`}</FusionName>
+            <ColumnSelections>
+                <TextField
+                    size="small"
                     label="Source Column"
                     value={sourceColumn}
                     onChange={({ target: { value } }) => setSourceColumn(value)}
+                    select
                 >
                     {sourceTable.columns.map((col) => (
                         <MenuItem key={col.id} value={col.id}>
                             {col.name}
                         </MenuItem>
                     ))}
-                </Select>
-                <Select
+                </TextField>
+                <TextField
+                    size="small"
                     label="Target Column"
                     value={targetColumn}
                     onChange={({ target: { value } }) => setTargetColumn(value)}
+                    select
                 >
                     {targetTable.columns.map((col) => (
                         <MenuItem key={col.id} value={col.id}>
                             {col.name}
                         </MenuItem>
                     ))}
-                </Select>
-            </div>
+                </TextField>
+            </ColumnSelections>
+            <SwitchColumnsRow>
+                <IconButton onClick={onSwitch}>
+                    <CompareArrowsIcon />
+                </IconButton>
+            </SwitchColumnsRow>
+
             <div style={{ display: 'flex' }}>
-                <Select
-                    label="Join Type"
-                    value={joinType}
-                    onChange={({ target: { value } }) => setJoinType(value)}
-                >
-                    {keys(JOIN_TYPE).map((joinType) => (
-                        <MenuItem key={joinType} value={joinType}>
-                            {joinType}
-                        </MenuItem>
-                    ))}
-                </Select>
-                <Button onClick={onSwitch}>Switch</Button>
+                <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">Join Type</FormLabel>
+                    <RadioGroup
+                        row
+                    >
+                        <FormControlLabel value={JOIN_TYPE.INNER} control={<Radio />} label="Inner"></FormControlLabel>
+                        <FormControlLabel value={JOIN_TYPE.LEFT} control={<Radio />} label="Left" />
+                        <FormControlLabel value={JOIN_TYPE.RIGHT} control={<Radio />} label="Right" />
+                        <FormControlLabel value={JOIN_TYPE.FULL} control={<Radio />} label="Full" />
+                    </RadioGroup>
+                </FormControl>
             </div>
             <div>
                 <Button onClick={onSubmit}>Submit</Button>
@@ -100,9 +124,29 @@ const FusionForm = ({ fusionsId }) => {
 };
 
 const Container = styled('div')`
-    width: 500px;
+    padding: 5px;
+    width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
+`;
+
+const FusionName = styled('div')`
+    color: ${({ theme }) => theme.palette.darkGrey};
+    font-weight: 500;
+    font-size: 18px;
+    text-align: center;
+`;
+
+const ColumnSelections = styled('div')`
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const SwitchColumnsRow = styled('div')`
+    display: flex;
+    justify-content: center;
 `;
 export default FusionForm;

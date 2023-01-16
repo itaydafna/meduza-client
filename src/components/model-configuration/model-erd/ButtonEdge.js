@@ -61,12 +61,10 @@ export default function ButtonEdge({
                 className="edgebutton-foreignobject"
                 requiredExtensions="http://www.w3.org/1999/xhtml"
             >
-                <div ref={anchorElementRef}>
-                    {selected && (
-                        <IconButton color="primary">
-                            <JoinInnerIcon />
-                        </IconButton>
-                    )}
+                <div ref={anchorElementRef} style={{ position: 'relative' }}>
+                    <IconButton color="primary">
+                        <JoinInnerIcon />
+                    </IconButton>
                 </div>
                 <Popper
                     open={isFusionPopperOpen}

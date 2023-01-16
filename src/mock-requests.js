@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { random } from 'lodash/fp';
+import {sample, values} from "lodash";
+import {COLUMN_TYPE} from "./constants/entity.constants";
 
 const FIRST_MODEL_ID = `${uuidv4()}`;
 
@@ -158,7 +160,7 @@ function generateMockTables(num, modelId) {
             columns: Array.from({ length: random(3, 7) }).map((_, idx) => ({
                 id: `${uuidv4()}`,
                 name: `Column ${idx + 1} (${tableName})`,
-                type: 'Number',
+                type: sample(values(COLUMN_TYPE)),
                 aggregationFunc: 'SUM',
             })),
         };

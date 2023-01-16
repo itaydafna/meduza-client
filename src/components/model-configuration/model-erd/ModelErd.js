@@ -6,6 +6,7 @@ import ReactFlow, {
     useNodesState,
     useEdgesState,
     ReactFlowProvider,
+    MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useCallback, useEffect, useContext, useState } from 'react';
@@ -19,6 +20,7 @@ import { noop } from 'lodash';
 import {
     useCreateFusionMutation,
     useFusionsQuery,
+    useTableDependencies,
 } from '../../../hooks/fusions.hooks';
 import { JOIN_TYPE } from '../../../constants/entity.constants';
 import {
@@ -38,10 +40,12 @@ const edgeTypes = {
     buttonedge: ButtonEdge,
 };
 
+export const ModelErdContext = React.createContext();
+
 const ModelErd = () => {
     const modelId = useContext(ModelContext);
-    const { data: tables } = useTablesQuery(modelId);
 
+    const { data: tables } = useTablesQuery(modelId);
     const { data: fusions } = useFusionsQuery(modelId);
 
     const { mutate: createFusion } = useCreateFusionMutation(modelId);
@@ -49,14 +53,19 @@ const ModelErd = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+    const [selectedEdge, setSelectedEdge] = useState(null);
+    const [nodeStartingConnection, setNodeStartingConnection] = useState(null);
+
     const onConnect = useCallback(
         (params, ...rest) => {
             setEdges((eds) =>
                 addEdge({ ...params, type: 'buttonedge', selected: true }, eds)
             );
             const { source, target, sourceHandle, targetHandle } = params;
+            const id = uuidv4();
+            setSelectedEdge(id);
             createFusion({
-                id: uuidv4(),
+                id,
                 joinType: JOIN_TYPE.INNER,
                 sourceTable: source,
                 targetTable: target,
@@ -100,13 +109,18 @@ const ModelErd = () => {
                 type: 'buttonedge',
                 sourceHandle: sourceColumn,
                 targetHandle: targetColumn,
+                selected: id === selectedEdge,
+                animated: true,
+                markerEnd: {
+                    type: MarkerType.ArrowClosed,
+                },
                 data: {
                     id,
                 },
             })
         );
         setEdges(edges);
-    }, [fusions, setEdges]);
+    }, [fusions, selectedEdge, setEdges]);
 
     const { mutate: updateTable } = useUpdateTableMutation(modelId);
 
@@ -118,29 +132,47 @@ const ModelErd = () => {
         [modelId, updateTable]
     );
 
+    const onConnectionStart = (event, { nodeId, handleId }) => {
+        const colType = event.target.dataset.coltype;
+        setNodeStartingConnection({ nodeId, handleId, colType });
+    };
+
+    const onConnectEnd = () => {
+        setNodeStartingConnection(null);
+    };
+
+    const { tableDependencies } = useTableDependencies(modelId);
+
+
     return (
-        <div style={{ height: '100%' }}>
-            <ReactFlowProvider>
-                <FlexWrapper>
-                    <ReactFlow
-                        id={modelId}
-                        nodes={nodes}
-                        onNodesChange={onNodesChange}
-                        edges={edges}
-                        onEdgesChange={onEdgesChange}
-                        onConnect={onConnect}
-                        nodeTypes={nodeTypes}
-                        edgeTypes={edgeTypes}
-                        onNodeDragStart={noop}
-                        onNodeDragStop={onNodeDragStop}
-                    >
-                        <Background />
-                        <Controls />
-                    </ReactFlow>
-                    <BottomActionButtons></BottomActionButtons>
-                </FlexWrapper>
-            </ReactFlowProvider>
-        </div>
+        <ModelErdContext.Provider
+            value={{ nodeStartingConnection, tableDependencies }}
+        >
+            <div style={{ height: '100%' }}>
+                <ReactFlowProvider>
+                    <FlexWrapper>
+                        <ReactFlow
+                            id={modelId}
+                            nodes={nodes}
+                            onNodesChange={onNodesChange}
+                            edges={edges}
+                            onEdgesChange={onEdgesChange}
+                            onConnect={onConnect}
+                            nodeTypes={nodeTypes}
+                            edgeTypes={edgeTypes}
+                            onNodeDragStart={noop}
+                            onNodeDragStop={onNodeDragStop}
+                            onConnectStart={onConnectionStart}
+                            onConnectEnd={onConnectEnd}
+                        >
+                            <Background />
+                            <Controls />
+                        </ReactFlow>
+                        <BottomActionButtons></BottomActionButtons>
+                    </FlexWrapper>
+                </ReactFlowProvider>
+            </div>
+        </ModelErdContext.Provider>
     );
 };
 

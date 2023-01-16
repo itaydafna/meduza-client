@@ -20,6 +20,8 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useCreateTableMutation } from '../../hooks/tables.hooks';
 
+
+
 const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
     const modelId = useContext(ModelContext);
     const [tableName, setTableName] = useState(name);

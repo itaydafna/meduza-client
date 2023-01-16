@@ -1,7 +1,8 @@
 export const JOIN_TYPE = {
     INNER: 'INNER',
     LEFT: 'LEFT',
-    RIGHT: 'RIGHT'
+    RIGHT: 'RIGHT',
+    FULL: 'FULL'
 }
 
 export const COLUMN_TYPE = {
