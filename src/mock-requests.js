@@ -5,7 +5,9 @@ const FIRST_MODEL_ID = `${uuidv4()}`;
 
 //DATA BASE:
 
-let MODELS = [{ name: 'Model One', id: FIRST_MODEL_ID }];
+let MODELS = [
+    // { name: 'Model One', id: FIRST_MODEL_ID }
+];
 
 // TABLE:
 //     id: uuid (String),
@@ -132,15 +134,27 @@ export function updateFusion(fusionToUpdate) {
     });
 }
 
+// Import API
+
+export function importModelFromDbt(modeId) {
+    return new Promise((resolve) => {
+        const dbtTables = generateMockTables(6, modeId);
+        TABLES = [...TABLES, ...dbtTables];
+        setTimeout(() => {
+            resolve({ dbtModelCreated: true });
+        }, 1000);
+    });
+}
+
 //utils
 
-function generateMockTables(num) {
+function generateMockTables(num, modelId) {
     return Array.from({ length: num }).map((_, idx) => {
         const tableName = `Table ${idx + 1}`;
         const table = {
             id: `${uuidv4()}`,
             name: tableName,
-            modelId: FIRST_MODEL_ID,
+            modelId: modelId,
             columns: Array.from({ length: random(3, 7) }).map((_, idx) => ({
                 id: `${uuidv4()}`,
                 name: `Column ${idx + 1} (${tableName})`,

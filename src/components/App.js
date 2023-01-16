@@ -5,16 +5,25 @@ import Toolbar from '@mui/material/Toolbar';
 import { styled } from '@mui/material';
 import { TabContext } from '@mui/lab';
 import { useState, useEffect, useRef } from 'react';
-import { useModelsQuery } from '../hooks/models.hooks';
+import {useCreateModelMutation, useModelsQuery} from '../hooks/models.hooks';
 import ModelConfigurationMain from './model-configuration/ModelConfigurationMain';
 import meduzaMain from '../assets/meduza-main.png';
 import ModelTabs from './model-tabs/ModelTabs';
-import { size } from 'lodash';
+import {isEmpty, size} from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 
 export const ModelContext = React.createContext();
 
 export default function App() {
-    const { isInitialLoading, data: models } = useModelsQuery();
+    const { isInitialLoading, data: models, isLoading } = useModelsQuery();
+    const { mutate: createNewModel } = useCreateModelMutation();
+
+    useEffect(()=>{
+        if(!isLoading && isEmpty(models)){
+            createNewModel({name: 'Model 1', id: uuidv4()})
+        }
+    },[createNewModel, isLoading, models])
+
     const [activeTab, setActiveTab] = useState(null);
     const prevModelsSize = useRef(size(models));
     useEffect(() => {
@@ -40,6 +49,7 @@ export default function App() {
                             variant="h6"
                             component="div"
                             sx={{ flexGrow: 1 }}
+                            fontFamily="WaterGalon"
                         >
                             MEDUZA
                         </Typography>

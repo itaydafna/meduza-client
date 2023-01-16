@@ -3,5 +3,6 @@ export const QUERY_KEYS = {
     TABLES: (modelId)=> ['tables',modelId],
     COLUMNS: (modelId, tableId) => ['columns', modelId, tableId],
     FUSIONS: (modelId)=>['fusions', modelId],
-    CALC_COLUMNS: (modelId)=>['calcColumns', modelId]
+    CALC_COLUMNS: (modelId)=>['calcColumns', modelId],
+    IMPORT_DBT_MODEL: (modelId)=>['dbt', modelId]
 }

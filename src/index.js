@@ -6,6 +6,9 @@ import App from './components/App';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import theme from './theme';
 
+import './assets/watter-galon.ttf';
+import './index.css';
+
 import {
     QueryClient,
     QueryClientProvider,

@@ -13,6 +13,12 @@ const theme = createTheme({
         error: {
             main: red.A400,
         },
+        white: {
+            main: "#ffffff"
+        },
+        darkGrey : {
+            main: '#747272FF'
+        }
     },
 })
 

@@ -1,18 +1,26 @@
-import { Button, Stack, styled, Typography } from '@mui/material';
+import {
+    Button,
+    Fab,
+    Stack,
+    styled,
+    useTheme,
+} from '@mui/material';
 import meduzaPlotting from '../../assets/meduza-plotting.png';
+import salesforceLogo from '../../assets/sf-logo.png';
+import genieLogo from '../../assets/genie-icon.png';
 
 import { TypeAnimation } from 'react-type-animation';
 import { AnimatePresence, motion } from 'framer-motion';
 import ImportExportRoundedIcon from '@mui/icons-material/ImportExportRounded';
 import GridOnRoundedIcon from '@mui/icons-material/GridOnRounded';
 import { useState } from 'react';
-
-function SendIcon() {
-    return null;
-}
+import DbtImportButton from './DbtImportButton';
 
 const NewModelLandingPage = () => {
     const [isShowImportOptions, setIsShowImportOptions] = useState(false);
+
+    const theme = useTheme();
+    const primaryColor = theme.palette.primary.main;
 
     return (
         <Container>
@@ -22,20 +30,19 @@ const NewModelLandingPage = () => {
                     wrapper="div"
                     cursor={false}
                     repeat={1}
-                    style={{ fontSize: '2em' }}
+                    style={{ fontSize: '2em', color: primaryColor }}
                 />
                 <img
                     src={meduzaPlotting}
                     height={250}
                     style={{ display: 'inline-block', margin: '10px 0' }}
                 />
-                <Typography></Typography>
                 <TypeAnimation
                     sequence={[2000, 'How should we set up your data model?']}
                     wrapper="div"
                     cursor
                     repeat={1}
-                    style={{ fontSize: '2em' }}
+                    style={{ fontSize: '2em', color: primaryColor }}
                 />
                 <Actions
                     animate={{
@@ -45,14 +52,18 @@ const NewModelLandingPage = () => {
                 >
                     <Stack direction="row" spacing={2}>
                         <Button
-                            variant="outlined"
+                            variant="contained"
                             startIcon={<GridOnRoundedIcon />}
                         >
                             Create new Custom Model
                         </Button>
                         <div style={{ position: 'relative' }}>
                             <Button
-                                variant="contained"
+                                variant={
+                                    isShowImportOptions
+                                        ? 'contained'
+                                        : 'outlined'
+                                }
                                 startIcon={<ImportExportRoundedIcon />}
                                 onClick={() =>
                                     setIsShowImportOptions((show) => !show)
@@ -60,46 +71,80 @@ const NewModelLandingPage = () => {
                             >
                                 Import Existing Model
                             </Button>
-                            <div style={{position: "absolute"}}>
-                                <AnimatePresence>
-                                    {isShowImportOptions ? (
-                                        <>
-                                            <motion.div
-                                                key={1}
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1,transition: {
-                                                    duration: 0.3,
-                                                    } }}
-                                                exit={{
-                                                    scale: 0,
-                                                    transition: { duration: 0.3 },
-                                                }}
-                                            >
-                                                <Button>Ginny</Button>
-                                            </motion.div>
-                                            <motion.div
-                                                key={2}
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1, transition: { delay: 0.3, duration: 0.3 } }}
-                                                exit={{
-                                                    scale: 0,
-                                                    transition: { delay: 0.3, duration: 0.3 }
-                                                }}
-                                            >
-                                                <Button>Datorama</Button>
-                                            </motion.div>
-                                            <motion.div
-                                                key={3}
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1, transition: { delay: 0.6, duration: 0.3 } }}
-                                                exit={{ scale: 0, transition: { delay: 0.6, duration: 0.3 } }}
-                                            >
-                                                <Button>DBT</Button>
-                                            </motion.div>
-                                        </>
-                                    ) : null}
-                                </AnimatePresence>
-                            </div>
+                            <AnimatePresence>
+                                {isShowImportOptions ? (
+                                    <ImportOptions>
+                                        <motion.div
+                                            key={1}
+                                            initial={{ scale: 0 }}
+                                            animate={{
+                                                scale: 1,
+                                                transition: {
+                                                    duration: 0.2,
+                                                },
+                                            }}
+                                            exit={{
+                                                scale: 0,
+                                                transition: {
+                                                    duration: 0.2,
+                                                },
+                                            }}
+                                        >
+                                            <Fab color="warning">
+                                                <img
+                                                    src={genieLogo}
+                                                    height={30}
+                                                ></img>
+                                            </Fab>
+                                        </motion.div>
+                                        <motion.div
+                                            key={2}
+                                            initial={{ scale: 0 }}
+                                            animate={{
+                                                scale: 1,
+                                                transition: {
+                                                    delay: 0.2,
+                                                    duration: 0.2,
+                                                },
+                                            }}
+                                            exit={{
+                                                scale: 0,
+                                                transition: {
+                                                    delay: 0.2,
+                                                    duration: 0.2,
+                                                },
+                                            }}
+                                        >
+                                            <Fab color="white">
+                                                <img
+                                                    src={salesforceLogo}
+                                                    height={30}
+                                                ></img>
+                                            </Fab>
+                                        </motion.div>
+                                        <motion.div
+                                            key={3}
+                                            initial={{ scale: 0 }}
+                                            animate={{
+                                                scale: 1,
+                                                transition: {
+                                                    delay: 0.4,
+                                                    duration: 0.2,
+                                                },
+                                            }}
+                                            exit={{
+                                                scale: 0,
+                                                transition: {
+                                                    delay: 0.4,
+                                                    duration: 0.2,
+                                                },
+                                            }}
+                                        >
+                                            <DbtImportButton />
+                                        </motion.div>
+                                    </ImportOptions>
+                                ) : null}
+                            </AnimatePresence>
                         </div>
                     </Stack>
                 </Actions>
@@ -125,7 +170,17 @@ const Content = styled('div')`
 `;
 
 const Actions = styled(motion.div)`
-    margin-top: 10px;
+    margin-top: 15px;
+`;
+
+const ImportOptions = styled('div')`
+    position: absolute;
+    top: calc(100% + 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
 `;
 
 export default NewModelLandingPage;
