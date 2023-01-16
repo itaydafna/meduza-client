@@ -72,6 +72,7 @@ const ModelTabs = ({ setActiveTab }) => {
     return (
         <Box
             sx={{
+                top: 60,
                 borderBottom: 1,
                 borderColor: 'divider',
                 display: 'flex',

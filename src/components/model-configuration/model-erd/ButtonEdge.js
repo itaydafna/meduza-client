@@ -3,7 +3,7 @@ import { getBezierPath } from 'reactflow';
 import JoinInnerIcon from '@mui/icons-material/JoinInner';
 
 import './ButtonEdeg.css';
-import { Fade, IconButton, Paper, Popper } from '@mui/material';
+import {Drawer, Fade, IconButton, Paper, Popper} from '@mui/material';
 import FusionForm from '../FusionForm';
 
 const foreignObjectSize = 40;
@@ -80,6 +80,13 @@ export default function ButtonEdge({
                         </Fade>
                     )}
                 </Popper>
+                {/*<Drawer*/}
+                {/*    anchor="left"*/}
+                {/*    open={isFusionPopperOpen}*/}
+                {/*    onClose={()=>setIsFusionPopperOpen(false)}*/}
+                {/*>*/}
+                {/*    Hello Drawer*/}
+                {/*</Drawer>*/}
             </foreignObject>
         </>
     );

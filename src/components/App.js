@@ -5,24 +5,27 @@ import Toolbar from '@mui/material/Toolbar';
 import { styled } from '@mui/material';
 import { TabContext } from '@mui/lab';
 import { useState, useEffect, useRef } from 'react';
-import {useCreateModelMutation, useModelsQuery} from '../hooks/models.hooks';
+import { useCreateModelMutation, useModelsQuery } from '../hooks/models.hooks';
 import ModelConfigurationMain from './model-configuration/ModelConfigurationMain';
 import meduzaMain from '../assets/meduza-main.png';
 import ModelTabs from './model-tabs/ModelTabs';
-import {isEmpty, size} from 'lodash';
+import { isEmpty, size } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
+export const AppContext = React.createContext();
 export const ModelContext = React.createContext();
 
 export default function App() {
     const { isInitialLoading, data: models, isLoading } = useModelsQuery();
     const { mutate: createNewModel } = useCreateModelMutation();
+    const [isPreviewAnimationPlayedOnce, setIsPreviewAnimationPlayedOnce] =
+        useState(false);
 
-    useEffect(()=>{
-        if(!isLoading && isEmpty(models)){
-            createNewModel({name: 'Model 1', id: uuidv4()})
+    useEffect(() => {
+        if (!isLoading && isEmpty(models)) {
+            createNewModel({ name: 'Model 1', id: uuidv4() });
         }
-    },[createNewModel, isLoading, models])
+    }, [createNewModel, isLoading, models]);
 
     const [activeTab, setActiveTab] = useState(null);
     const prevModelsSize = useRef(size(models));
@@ -37,38 +40,43 @@ export default function App() {
     }, [models, setActiveTab]);
 
     return (
-        <AppContainer>
-            <AppBar position="static">
-                <Toolbar>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img
-                            height={50}
-                            src={meduzaMain}
-                            alt=""
-                            style={{ marginRight: 10 }}
-                        />
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            sx={{ flexGrow: 1 }}
-                            fontFamily="WaterGalon"
-                        >
-                            MEDUZA
-                        </Typography>
-                    </div>
-                </Toolbar>
-            </AppBar>
-            {isInitialLoading || !activeTab ? null : (
-                <TabContext value={activeTab}>
-                    <ModelTabs setActiveTab={setActiveTab} />
-                    {models.map((model) => (
-                        <ModelContext.Provider key={model.id} value={model.id}>
-                            <ModelConfigurationMain isNew={!!model.isNew} />
-                        </ModelContext.Provider>
-                    ))}
-                </TabContext>
-            )}
-        </AppContainer>
+        <AppContext.Provider value={{isPreviewAnimationPlayedOnce, setIsPreviewAnimationPlayedOnce}}>
+            <AppContainer>
+                <AppBar position="static">
+                    <Toolbar>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <img
+                                height={50}
+                                src={meduzaMain}
+                                alt=""
+                                style={{ marginRight: 10 }}
+                            />
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{ flexGrow: 1 }}
+                                fontFamily="WaterGalon"
+                            >
+                                MEDUZA
+                            </Typography>
+                        </div>
+                    </Toolbar>
+                </AppBar>
+                {isInitialLoading || !activeTab ? null : (
+                    <TabContext value={activeTab}>
+                        <ModelTabs setActiveTab={setActiveTab} />
+                        {models.map((model) => (
+                            <ModelContext.Provider
+                                key={model.id}
+                                value={model.id}
+                            >
+                                <ModelConfigurationMain isNew={!!model.isNew} />
+                            </ModelContext.Provider>
+                        ))}
+                    </TabContext>
+                )}
+            </AppContainer>
+        </AppContext.Provider>
     );
 }
 

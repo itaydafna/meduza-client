@@ -164,6 +164,7 @@ const ModelErd = () => {
                             onNodeDragStop={onNodeDragStop}
                             onConnectStart={onConnectionStart}
                             onConnectEnd={onConnectEnd}
+                            style={{backgroundColor: '#B8CEFF'}}
                         >
                             <Background />
                             <Controls />

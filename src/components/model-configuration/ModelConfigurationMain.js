@@ -9,7 +9,7 @@ import { useTablesQuery } from '../../hooks/tables.hooks';
 import { useFusionsQuery } from '../../hooks/fusions.hooks';
 import NewModelLandingPage from './NewModelLandingPage';
 
-const ModelConfigurationMain = ({isNew}) => {
+const ModelConfigurationMain = ({ isNew }) => {
     const modelId = useContext(ModelContext);
     const { data: tables, isLoading: isTablesLoading } =
         useTablesQuery(modelId);
@@ -32,6 +32,7 @@ const ModelConfigurationMain = ({isNew}) => {
 const StyledTabPanel = styled(TabPanel)`
     flex: 1;
     box-sizing: border-box;
+    padding: 0;
 `;
 
 export default ModelConfigurationMain;

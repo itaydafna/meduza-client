@@ -124,7 +124,7 @@ const FusionForm = ({ fusionsId }) => {
 };
 
 const Container = styled('div')`
-    padding: 5px;
+    padding: 10px;
     width: 400px;
     display: flex;
     flex-direction: column;
@@ -139,6 +139,7 @@ const FusionName = styled('div')`
 `;
 
 const ColumnSelections = styled('div')`
+    width: 100%;
     margin-top: 20px;
     display: flex;
     align-items: center;
