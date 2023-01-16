@@ -1,10 +1,4 @@
-import {
-    Button,
-    Fab,
-    Stack,
-    styled,
-    useTheme,
-} from '@mui/material';
+import { Button, Fab, Stack, styled, useTheme } from '@mui/material';
 import meduzaPlotting from '../../assets/meduza-plotting.png';
 import salesforceLogo from '../../assets/sf-logo.png';
 import genieLogo from '../../assets/genie-icon.png';
@@ -15,6 +9,8 @@ import ImportExportRoundedIcon from '@mui/icons-material/ImportExportRounded';
 import GridOnRoundedIcon from '@mui/icons-material/GridOnRounded';
 import { useState } from 'react';
 import DbtImportButton from './DbtImportButton';
+import TableDialog from './TableDialog';
+import AddNewTable from './AddNewTable';
 
 const NewModelLandingPage = () => {
     const [isShowImportOptions, setIsShowImportOptions] = useState(false);
@@ -51,12 +47,7 @@ const NewModelLandingPage = () => {
                     }}
                 >
                     <Stack direction="row" spacing={2}>
-                        <Button
-                            variant="contained"
-                            startIcon={<GridOnRoundedIcon />}
-                        >
-                            Create new Custom Model
-                        </Button>
+                        <AddNewTable />
                         <div style={{ position: 'relative' }}>
                             <Button
                                 variant={

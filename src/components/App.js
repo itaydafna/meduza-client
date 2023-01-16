@@ -26,6 +26,7 @@ export default function App() {
 
     const [activeTab, setActiveTab] = useState(null);
     const prevModelsSize = useRef(size(models));
+
     useEffect(() => {
         if (prevModelsSize.current < size(models)) {
             setActiveTab(models[models.length - 1].id);
@@ -34,6 +35,7 @@ export default function App() {
             prevModelsSize.current = size(models);
         }
     }, [models, setActiveTab]);
+
     return (
         <AppContainer>
             <AppBar position="static">
@@ -61,7 +63,7 @@ export default function App() {
                     <ModelTabs setActiveTab={setActiveTab} />
                     {models.map((model) => (
                         <ModelContext.Provider key={model.id} value={model.id}>
-                            <ModelConfigurationMain />
+                            <ModelConfigurationMain isNew={!!model.isNew} />
                         </ModelContext.Provider>
                     ))}
                 </TabContext>

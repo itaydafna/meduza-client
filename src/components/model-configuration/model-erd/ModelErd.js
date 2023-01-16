@@ -28,10 +28,7 @@ import {
 import { ModelContext } from '../../App';
 
 import TableNode from './TableNode';
-import { Fab, styled } from '@mui/material';
-import TableChartSharpIcon from '@mui/icons-material/TableChartSharp';
-import TableDialog from '../TableDialog';
-import QueryBuilderDialog from '../../query-builder/QueryBuilderDialog';
+import { styled } from '@mui/material';
 
 const nodeTypes = {
     tableNode: TableNode,
@@ -46,15 +43,6 @@ const ModelErd = () => {
     const { data: tables } = useTablesQuery(modelId);
 
     const { data: fusions } = useFusionsQuery(modelId);
-
-    const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
-    const [isBuilderDialogOpen, setIsBuilderDialogOpen] = useState(false);
-    const toggleTableDialog = () => setIsTableDialogOpen((isOpen) => !isOpen);
-    const closeTableDialog = () => setIsTableDialogOpen(false);
-
-    const toggleBuilderDialog = () =>
-        setIsBuilderDialogOpen((isOpen) => !isOpen);
-    const closeBuilderDialog = () => setIsBuilderDialogOpen(false);
 
     const { mutate: createFusion } = useCreateFusionMutation(modelId);
 
@@ -149,31 +137,8 @@ const ModelErd = () => {
                         <Background />
                         <Controls />
                     </ReactFlow>
-                    <BottomActionButtons>
-                        <Fab
-                            color="primary"
-                            aria-label="add"
-                            onClick={toggleTableDialog}
-                        >
-                            <TableChartSharpIcon />
-                        </Fab>
-                        <Fab
-                            color="primary"
-                            aria-label="add"
-                            onClick={toggleBuilderDialog}
-                        >
-                            Create Query
-                        </Fab>
-                    </BottomActionButtons>
+                    <BottomActionButtons></BottomActionButtons>
                 </FlexWrapper>
-                <TableDialog
-                    isOpen={isTableDialogOpen}
-                    handleClose={closeTableDialog}
-                />
-                <QueryBuilderDialog
-                    isOpen={isBuilderDialogOpen}
-                    handleClose={closeBuilderDialog}
-                />
             </ReactFlowProvider>
         </div>
     );

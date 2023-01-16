@@ -9,7 +9,7 @@ import { useTablesQuery } from '../../hooks/tables.hooks';
 import { useFusionsQuery } from '../../hooks/fusions.hooks';
 import NewModelLandingPage from './NewModelLandingPage';
 
-const ModelConfigurationMain = () => {
+const ModelConfigurationMain = ({isNew}) => {
     const modelId = useContext(ModelContext);
     const { data: tables, isLoading: isTablesLoading } =
         useTablesQuery(modelId);
@@ -18,7 +18,7 @@ const ModelConfigurationMain = () => {
 
     return (
         <StyledTabPanel key={modelId} value={modelId} index={modelId}>
-            {isTablesLoading || isFusionsLoading ? (
+            {!isNew && (isTablesLoading || isFusionsLoading) ? (
                 'Tables Loading'
             ) : isEmpty(tables) ? (
                 <NewModelLandingPage />

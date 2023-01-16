@@ -5,6 +5,8 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Stack,
+    styled,
     TextField,
 } from '@mui/material';
 import { isEmpty, keys } from 'lodash';
@@ -23,7 +25,6 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
     const [tableName, setTableName] = useState(name);
     const [rows, setRows] = useState(isEmpty(columns) ? [] : columns);
 
-
     const deleteColumn = useCallback(
         (id) => () => {
             setTimeout(() => {
@@ -38,7 +39,7 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
             setRows((prevRows) => [
                 {
                     id: uuidv4(),
-                    name: '',
+                    name: 'New Column',
                     type: COLUMN_TYPE.STRING,
                     aggregationFunction: AGGREGATION_FUNCTION.NONE,
                 },
@@ -69,7 +70,7 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
                 headerName: 'Column Name',
                 type: 'string',
                 editable: true,
-                width: 200
+                width: 200,
             },
             {
                 field: 'type',
@@ -77,7 +78,7 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
                 type: 'singleSelect',
                 editable: true,
                 valueOptions: keys(COLUMN_TYPE),
-                width: 200
+                width: 200,
             },
             {
                 field: 'aggregationFunction',
@@ -85,7 +86,7 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
                 type: 'singleSelect',
                 editable: true,
                 valueOptions: keys(AGGREGATION_FUNCTION),
-                width: 200
+                width: 200,
             },
             {
                 field: 'actions',
@@ -118,34 +119,72 @@ const TableDialog = ({ isOpen, handleClose, name = '', columns = [] }) => {
         });
         closeAndClearForm();
     }, [closeAndClearForm, createTable, modelId, rows, tableName]);
+
+    const isSubmitDisabled = !tableName || isEmpty(rows);
     return (
-        <Dialog open={isOpen} onClose={handleClose} fullScreen>
+        <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth="md">
             <DialogTitle>Add New Table</DialogTitle>
             <DialogContent>
-                <div style={{ height: 500, width: '100%' }}>
-                    <TextField
+                <FormContainer>
+                    <StyledTextField
+                        size="small"
                         value={tableName}
                         label="Table Name"
+                        autoFocus
                         onChange={({ target: { value } }) =>
                             setTableName(value)
                         }
                     />
-                    <Button variant="contained" onClick={addNewColumn}>
+                    <StyledButton
+                        size="small"
+                        variant="contained"
+                        onClick={addNewColumn}
+                    >
                         Add New Column
-                    </Button>
+                    </StyledButton>
                     <DataGrid
                         columns={gridColumns}
                         rows={rows}
                         onCellEditCommit={onCellEdit}
+                        components={{
+                            NoRowsOverlay: () => (
+                                <Stack
+                                    height="100%"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    Click above to add columns to your table
+                                </Stack>
+                            ),
+                        }}
                     />
-                </div>
+                </FormContainer>
             </DialogContent>
             <DialogActions>
-                <Button onClick={closeAndClearForm}>Cancel</Button>
-                <Button onClick={onSubmit}>Subscribe</Button>
+                <Button variant="outlined" onClick={closeAndClearForm}>Cancel</Button>
+                <Button variant="contained" color={'primary'} onClick={onSubmit} disabled={isSubmitDisabled}>
+                    Save
+                </Button>
             </DialogActions>
         </Dialog>
     );
 };
+
+const FormContainer = styled('div')`
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+`;
+
+const StyledTextField = styled(TextField)`
+    width: 200px;
+    margin-bottom: 10px;
+`;
+
+const StyledButton = styled(Button)`
+    width: 200px;
+    margin-bottom: 10px;
+`;
 
 export default TableDialog;

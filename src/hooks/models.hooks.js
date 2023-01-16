@@ -19,7 +19,7 @@ export const useCreateModelMutation = () => {
             ]);
             queryClient.setQueryData(QUERY_KEYS.MODELS, (old) => [
                 ...old,
-                newModel,
+                {...newModel, isNew: true},
             ]);
             return { previousModels };
         },
