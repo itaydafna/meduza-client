@@ -31,6 +31,9 @@ import { ModelContext } from '../../App';
 
 import TableNode from './TableNode';
 import { styled } from '@mui/material';
+import {AnimatePresence, motion} from 'framer-motion';
+import AddNewTable from '../AddNewTable';
+import QueryBuilder from './query-builder/QueryBuilder';
 
 const nodeTypes = {
     tableNode: TableNode,
@@ -142,13 +145,19 @@ const ModelErd = () => {
     };
 
     const { tableDependencies } = useTableDependencies(modelId);
+    const [isBuilderOpen, setIsBuilderOpen] = useState(false);
 
 
     return (
         <ModelErdContext.Provider
-            value={{ nodeStartingConnection, tableDependencies }}
+            value={{
+                nodeStartingConnection,
+                tableDependencies,
+                isBuilderOpen,
+                setIsBuilderOpen,
+            }}
         >
-            <div style={{ height: '100%' }}>
+            <Container>
                 <ReactFlowProvider>
                     <FlexWrapper>
                         <StyledReactFlow
@@ -163,17 +172,31 @@ const ModelErd = () => {
                             onNodeDragStart={noop}
                             onNodeDragStop={onNodeDragStop}
                             onConnectStart={onConnectionStart}
-                            onConnectEnd={onConnectEnd}>
+                            onConnectEnd={onConnectEnd}
+                        >
                             <Background />
                             <Controls />
                         </StyledReactFlow>
                         <BottomActionButtons></BottomActionButtons>
                     </FlexWrapper>
                 </ReactFlowProvider>
-            </div>
+                <AnimatePresence initial={false}>
+                    { isBuilderOpen ? null :  <motion.div key={4} initial={{opacity: 0}} animate={{ opacity: 1, transition: { delay: 1 }}} exit={{opacity: 0}}>
+                        <AddTableContainer>
+                            <AddNewTable isErdPage />
+                        </AddTableContainer>
+                    </motion.div>}
+                </AnimatePresence>
+                <QueryBuilder />
+            </Container>
         </ModelErdContext.Provider>
     );
 };
+
+const Container = styled('div')`
+    height: 100%;
+    position: relative;
+`;
 
 const FlexWrapper = styled('div')`
     display: flex;
@@ -189,6 +212,14 @@ const StyledReactFlow = styled(ReactFlow)`
 
 const BottomActionButtons = styled('div')`
     margin-top: auto;
+`;
+
+const AddTableContainer = styled('div')`
+    position: absolute;
+    z-index: 100;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
 `;
 
 export default ModelErd;

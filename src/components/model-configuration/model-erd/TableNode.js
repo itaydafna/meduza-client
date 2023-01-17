@@ -7,17 +7,10 @@ import arrowIcon from '../../../assets/arrow.svg';
 import arrowRight from '../../../assets/arrow_right.svg'
 
 import Typography from '@mui/material/Typography';
-import NumbersIcon from '@mui/icons-material/Numbers';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import TextFieldsIcon from '@mui/icons-material/TextFields';
-import { COLUMN_TYPE } from '../../../constants/app.constants';
+import {COLUMN_TYPE, COLUMN_TYPE_ICONS} from '../../../constants/app.constants';
 import { ModelErdContext } from './ModelErd';
 
-const COLUMN_TYPE_ICONS = {
-    [COLUMN_TYPE.STRING]: <TextFieldsIcon />,
-    [COLUMN_TYPE.NUMBER]: <NumbersIcon />,
-    [COLUMN_TYPE.DATE]: <CalendarMonthIcon />,
-};
+
 
 const TableNode = memo(({ data, id }) => {
     const { name, columns } = data;

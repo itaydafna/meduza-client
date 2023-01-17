@@ -6,20 +6,15 @@ import {
     DialogTitle,
     Fab,
     MenuItem,
-    Select,
-    Stack,
     styled,
     TextField,
-    Typography,
 } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { vendorConfig } from '../../constants/app.constants';
-import Autocomplete from '@mui/material/Autocomplete';
 import {
     useImportVendorModel,
     useVendorProfiles,
 } from '../../hooks/import.hooks';
-import { SevenK } from '@mui/icons-material';
 import { isEmpty } from 'lodash';
 import { ModelContext } from '../App';
 
@@ -112,7 +107,6 @@ const VendorImport = ({ vendor }) => {
                     <Button
                         variant="contained"
                         color={'primary'}
-                        onClick={handleClose}
                         disabled={!selectedProfile}
                         onClick={() => setIsImportVendorModelEnabled(true)}
                     >
