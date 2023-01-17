@@ -1,20 +1,17 @@
 import { Button, Fab, Stack, styled, useTheme } from '@mui/material';
 import meduzaPlotting from '../../assets/meduza-plotting.png';
-import salesforceLogo from '../../assets/sf-logo.png';
-import genieLogo from '../../assets/genie-icon.png';
 
 import { TypeAnimation } from 'react-type-animation';
 import { AnimatePresence, motion } from 'framer-motion';
 import ImportExportRoundedIcon from '@mui/icons-material/ImportExportRounded';
-import GridOnRoundedIcon from '@mui/icons-material/GridOnRounded';
 import { useContext, useState } from 'react';
 import DbtImportButton from './DbtImportButton';
-import TableDialog from './TableDialog';
 import AddNewTable from './AddNewTable';
 
-import meduzaMain from '../../assets/meduza-main.png';
 import { AppContext } from '../App';
 import Typography from '@mui/material/Typography';
+import VendorImport from "./VendorImport";
+import {VENDORS} from "../../constants/app.constants";
 
 const NewModelLandingPage = () => {
     const [isShowImportOptions, setIsShowImportOptions] = useState(false);
@@ -27,11 +24,13 @@ const NewModelLandingPage = () => {
     return (
         <Container>
             <Content>
-                {isPreviewAnimationPlayedOnce ? <Typography
-                    style={{ fontSize: '2em', color: primaryColor }}
-                >
-                    Hello there!
-                </Typography> : (
+                {
+                //     isPreviewAnimationPlayedOnce ? <Typography
+                //     style={{ fontSize: '2em', color: primaryColor }}
+                // >
+                //     Hello there!
+                // </Typography> :
+                //     (
                     <TypeAnimation
                         sequence={["Hello there! I'm Meduza", 1000]}
                         wrapper="div"
@@ -39,13 +38,13 @@ const NewModelLandingPage = () => {
                         repeat={1}
                         style={{ fontSize: '2em', color: primaryColor }}
                     />
-                )}
+                }
                 <img
                     src={meduzaPlotting}
                     height={250}
                     style={{ display: 'inline-block', margin: '10px 0' }}
                 />
-                {isPreviewAnimationPlayedOnce ? (
+                {false ? (
                     <Typography
                         style={{ fontSize: '2em', color: primaryColor }}
                     >
@@ -107,12 +106,7 @@ const NewModelLandingPage = () => {
                                                 },
                                             }}
                                         >
-                                            <Fab color="warning">
-                                                <img
-                                                    src={genieLogo}
-                                                    height={30}
-                                                ></img>
-                                            </Fab>
+                                            <VendorImport vendor={VENDORS.GENIE}/>
                                         </motion.div>
                                         <motion.div
                                             key={2}
@@ -132,12 +126,7 @@ const NewModelLandingPage = () => {
                                                 },
                                             }}
                                         >
-                                            <Fab color="white">
-                                                <img
-                                                    src={salesforceLogo}
-                                                    height={30}
-                                                ></img>
-                                            </Fab>
+                                            <VendorImport vendor={VENDORS.DATORAMA}/>
                                         </motion.div>
                                         <motion.div
                                             key={3}

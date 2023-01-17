@@ -13,7 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import { keys } from 'lodash';
-import { JOIN_TYPE } from '../../constants/entity.constants';
+import { JOIN_TYPE } from '../../constants/app.constants';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 import JoinInnerIcon from '@mui/icons-material/JoinInner';

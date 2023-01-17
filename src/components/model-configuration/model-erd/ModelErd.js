@@ -22,7 +22,7 @@ import {
     useFusionsQuery,
     useTableDependencies,
 } from '../../../hooks/fusions.hooks';
-import { JOIN_TYPE } from '../../../constants/entity.constants';
+import { JOIN_TYPE } from '../../../constants/app.constants';
 import {
     transformNodeToTable,
     transformTableToNode,

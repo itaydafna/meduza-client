@@ -1,11 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import { random } from 'lodash/fp';
 import {sample, values} from "lodash";
-import {COLUMN_TYPE} from "./constants/entity.constants";
+import {COLUMN_TYPE} from "./constants/app.constants";
 
 const FIRST_MODEL_ID = `${uuidv4()}`;
 
 //DATA BASE:
+//name: String
+// id: uuid
 
 let MODELS = [
     // { name: 'Model One', id: FIRST_MODEL_ID }
@@ -21,8 +23,8 @@ let MODELS = [
 // COLUMNS:
 //     id: uuid (String),
 //     name: String,
-//     type: 'Number' | 'String' | 'Date',
-//     aggregationFunc: 'SUM' | 'AVG | 'MAX' | 'MIN'
+//     type: 'Number' | 'Text' | 'Date',
+//     aggregationFunc: 'SUM' | 'AVG | 'MAX' | 'MIN' | 'Count'
 
 let TABLES = generateMockTables(5);
 

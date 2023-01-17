@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
-import { COLUMN_TYPE } from '../../../constants/entity.constants';
+import { COLUMN_TYPE } from '../../../constants/app.constants';
 import { ModelErdContext } from './ModelErd';
 
 const COLUMN_TYPE_ICONS = {

@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     AGGREGATION_FUNCTION,
     COLUMN_TYPE,
-} from '../../constants/entity.constants';
+} from '../../constants/app.constants';
 import { ModelContext } from '../App';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
