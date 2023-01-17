@@ -151,7 +151,7 @@ const ModelErd = () => {
             <div style={{ height: '100%' }}>
                 <ReactFlowProvider>
                     <FlexWrapper>
-                        <ReactFlow
+                        <StyledReactFlow
                             id={modelId}
                             nodes={nodes}
                             onNodesChange={onNodesChange}
@@ -163,12 +163,10 @@ const ModelErd = () => {
                             onNodeDragStart={noop}
                             onNodeDragStop={onNodeDragStop}
                             onConnectStart={onConnectionStart}
-                            onConnectEnd={onConnectEnd}
-                            style={{backgroundColor: '#B8CEFF'}}
-                        >
+                            onConnectEnd={onConnectEnd}>
                             <Background />
                             <Controls />
-                        </ReactFlow>
+                        </StyledReactFlow>
                         <BottomActionButtons></BottomActionButtons>
                     </FlexWrapper>
                 </ReactFlowProvider>
@@ -181,6 +179,12 @@ const FlexWrapper = styled('div')`
     display: flex;
     flex-direction: column;
     height: 100%;
+`;
+const StyledReactFlow = styled(ReactFlow)`
+    text-color: rgb(243, 244, 246);
+    node-border-radius: 10px;
+    node-box-shadow: 10px 0 15px rgba(42, 138, 246, 0.3), -10px 0 15px rgba(233, 42, 103, 0.3);
+    background-color:rgb(184, 206, 255);
 `;
 
 const BottomActionButtons = styled('div')`

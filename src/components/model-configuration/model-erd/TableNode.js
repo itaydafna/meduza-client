@@ -4,6 +4,8 @@ import { styled } from '@mui/material';
 import { Handle } from 'reactflow';
 import targetIcon from '../../../assets/target.svg';
 import arrowIcon from '../../../assets/arrow.svg';
+import arrowRight from '../../../assets/arrow_right.svg'
+
 import Typography from '@mui/material/Typography';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -79,20 +81,40 @@ const TableNode = memo(({ data, id }) => {
 const TableNodeContainer = styled('div')`
     display: flex;
     flex-direction: column;
-    background: white;
+    background: rgb(85, 108, 214);
     box-sizing: border-box;
     border: 1px solid gray;
     padding: 5px;
     border-radius: 5px;
+    min-width: 150px;
+    font-family: 'Fira Mono', Monospace;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    box-shadow: -5px 0 15px rgba(93, 91, 91, 0.5);
 `;
 
-const TableBody = styled('div')``;
+const TableBody = styled('div')`
+    background:  rgba(239, 232, 232, 0.66);
+    // padding: 16px 0;
+    // border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    // overflow: hidden;
+    position: relative;
+`;
 
 const ColumnRow = styled('div')`
     position: relative;
-    padding: 5px 10px;
+    padding: 5px;
     display: flex;
     align-items: center;
+    // border-radius: 10px;
+
+    &:nth-child(odd) {
+    background-color: white;
+    }
 `;
 
 const ColumnName = styled('span')`
@@ -122,19 +144,35 @@ const StyledTargetHandle = styled(Handle)`
 
 const StyledSourceHandle = styled(Handle)`
     position: absolute;
-    background: none;
+    background: red;
+    height: 5px;
+    width: 5px;
     &:after {
-        position: absolute;
-        background-image: url(${arrowIcon});
-        background-size: 30px 35px;
-        display: ${({ isConnectable }) =>
-            isConnectable ? `inline-block` : 'none'};
-        width: 30px;
-        height: 35px;
-        content: '';
-        top: -13px;
-        left: -5px;
-    }
+    position: absolute;
+    background-image: url(${arrowRight});
+    background-size: 30px 35px;
+    display: ${({ isConnectable }) =>
+        isConnectable ? `inline-block` : 'none'};
+    width: 30px;
+    height: 35px;
+    content: '';
+    top: -13px;
+    left: -6px;
+}
+
 `;
+
+// &:after {
+//     position: absolute;
+//     background-image: url(${blackArrow});
+//     background-size: 30px 35px;
+//     display: ${({ isConnectable }) =>
+//         isConnectable ? `inline-block` : 'none'};
+//     width: 30px;
+//     height: 35px;
+//     content: '';
+//     top: -13px;
+//     left: -5px;
+// }
 
 export default TableNode;
