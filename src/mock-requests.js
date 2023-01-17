@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { random } from 'lodash/fp';
-import {sample, values} from "lodash";
-import {COLUMN_TYPE} from "./constants/app.constants";
+import { sample, values } from 'lodash';
+import { COLUMN_TYPE } from './constants/app.constants';
 
 const FIRST_MODEL_ID = `${uuidv4()}`;
 
@@ -144,6 +144,33 @@ export function importModelFromDbt(modeId) {
     return new Promise((resolve) => {
         const dbtTables = generateMockTables(6, modeId);
         TABLES = [...TABLES, ...dbtTables];
+        setTimeout(() => {
+            resolve({ dbtModelCreated: true });
+        }, 1000);
+    });
+}
+
+
+export function getAuthProfiles() {
+    return new Promise((resolve) => {
+        const profiles = [
+            { id: uuidv4(), name: 'Profile 1' },
+            { id: uuidv4(), name: 'Profile 2' },
+            { id: uuidv4(), name: 'Profile 3' },
+            { id: uuidv4(), name: 'Profile 4' },
+            { id: uuidv4(), name: 'Profile 5' },
+        ];
+        setTimeout(() => {
+            resolve(profiles);
+        }, 1000);
+    });
+}
+
+
+export function importVendorModel(modeId,profileId) {
+    return new Promise((resolve) => {
+        const vendorTables = generateMockTables(9, modeId);
+        TABLES = [...TABLES, ...vendorTables];
         setTimeout(() => {
             resolve({ dbtModelCreated: true });
         }, 1000);
