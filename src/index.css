@@ -1,6 +1,12 @@
 @font-face {
     font-family: "WaterGalon";
     src: local("WaterGalon"),
-    url("./assets/watter-galon.ttf") format("truetype");
+    url("assets/fonts/watter-galon.ttf") format("truetype");
+    font-weight: bold;
+}
+@font-face {
+    font-family: "PermanentMarker";
+    src: local("PermanentMarker"),
+    url("assets/fonts/PermanentMarker-Regular.ttf") format("truetype");
     font-weight: bold;
 }

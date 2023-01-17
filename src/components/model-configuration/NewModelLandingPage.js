@@ -36,7 +36,7 @@ const NewModelLandingPage = () => {
                         wrapper="div"
                         cursor={false}
                         repeat={1}
-                        style={{ fontSize: '2em', color: primaryColor }}
+                        style={{ fontSize: '2em', color: primaryColor, fontFamily: 'Courier New' }}
                     />
                 }
                 <img
@@ -59,7 +59,7 @@ const NewModelLandingPage = () => {
                         wrapper="div"
                         cursor
                         repeat={1}
-                        style={{ fontSize: '2em', color: primaryColor }}
+                        style={{ fontSize: '2em', color: primaryColor, fontFamily: 'Courier New' }}
                     />
                 )}
                 <Actions

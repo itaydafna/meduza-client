@@ -32,12 +32,14 @@ export const vendorConfig = {
     [VENDORS.GENIE] : {
         id: VENDORS.GENIE,
         iconSrc: genieLogo,
-        name: "Genie"
+        name: "Genie",
+        backgroundColor: "ginieBackground"
     },
     [VENDORS.DATORAMA] : {
         id: VENDORS.DATORAMA,
         iconSrc: salesforceLogo,
-        name: "Salesforce DI"
+        name: "Salesforce DI",
+        backgroundColor: "white"
     }
 }
 

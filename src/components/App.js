@@ -55,7 +55,7 @@ export default function App() {
                                 variant="h6"
                                 component="div"
                                 sx={{ flexGrow: 1 }}
-                                fontFamily="WaterGalon"
+                                fontFamily="Roboto"
                             >
                                 MEDUZA
                             </Typography>

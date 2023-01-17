@@ -18,6 +18,10 @@ const theme = createTheme({
         },
         darkGrey : {
             main: '#747272FF'
+        },
+        ginieBackground : {
+            main: "#85196a"
+
         }
     },
 })

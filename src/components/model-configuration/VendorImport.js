@@ -120,7 +120,7 @@ const VendorImport = ({ vendor }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Fab color="warning" onClick={() => setIsOpen(true)}>
+            <Fab color={vendorConfig[vendor].backgroundColor} onClick={() => setIsOpen(true)}>
                 <img src={vendorConfig[vendor].iconSrc} height={30}></img>
             </Fab>
         </>
