@@ -84,3 +84,20 @@ export const useUpdateTableMutation = (modelId) => {
 
     return mutation;
 };
+
+export const useAllModelColumns = (modelId)=>{
+    const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
+        fetchTables(modelId), {select: (tables)=>{
+            const allCols = [];
+            tables.forEach(table=>{
+                table.columns.forEach(col=>{
+                   col.tableId = table.id;
+                   col.tableName = table.name;
+                   allCols.push(col);
+                });
+            },)
+            return allCols;
+        }}
+    );
+    return query;
+}
