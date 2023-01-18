@@ -1,16 +1,16 @@
-import { memo, useCallback, useContext, useMemo } from 'react';
+import { memo, useCallback, useContext } from 'react';
 import * as React from 'react';
 import { styled } from '@mui/material';
 import { Handle } from 'reactflow';
 import targetIcon from '../../../assets/target.svg';
-import arrowIcon from '../../../assets/arrow.svg';
-import arrowRight from '../../../assets/arrow_right.svg'
+import arrowRight from '../../../assets/arrow_right.svg';
 
 import Typography from '@mui/material/Typography';
-import {COLUMN_TYPE, COLUMN_TYPE_ICONS} from '../../../constants/app.constants';
+import {
+    COLUMN_TYPE,
+    COLUMN_TYPE_ICONS,
+} from '../../../constants/app.constants';
 import { ModelErdContext } from './ModelErd';
-
-
 
 const TableNode = memo(({ data, id }) => {
     const { name, columns } = data;
@@ -87,7 +87,7 @@ const TableNodeContainer = styled('div')`
 `;
 
 const TableBody = styled('div')`
-    background:  rgba(239, 232, 232, 0.66);
+    background: rgba(239, 232, 232, 0.66);
     // padding: 16px 0;
     // border-radius: 10px;
     display: flex;
@@ -106,7 +106,7 @@ const ColumnRow = styled('div')`
     // border-radius: 10px;
 
     &:nth-child(odd) {
-    background-color: white;
+        background-color: white;
     }
 `;
 
@@ -119,7 +119,8 @@ const ColumnName = styled('span')`
 
 const StyledTargetHandle = styled(Handle)`
     position: absolute;
-    background: none;
+    background: transparent;
+    border: none;
 
     &:after {
         position: absolute;
@@ -137,22 +138,20 @@ const StyledTargetHandle = styled(Handle)`
 
 const StyledSourceHandle = styled(Handle)`
     position: absolute;
-    background: red;
-    height: 5px;
-    width: 5px;
+    background: transparent;
+    border: none;
     &:after {
-    position: absolute;
-    background-image: url(${arrowRight});
-    background-size: 30px 35px;
-    display: ${({ isConnectable }) =>
-        isConnectable ? `inline-block` : 'none'};
-    width: 30px;
-    height: 35px;
-    content: '';
-    top: -13px;
-    left: -6px;
-}
-
+        position: absolute;
+        background-image: url(${arrowRight});
+        background-size: 30px 35px;
+        display: ${({ isConnectable }) =>
+            isConnectable ? `inline-block` : 'none'};
+        width: 30px;
+        height: 35px;
+        content: '';
+        top: -13px;
+        left: -6px;
+    }
 `;
 
 // &:after {

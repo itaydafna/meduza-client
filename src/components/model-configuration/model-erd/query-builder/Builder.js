@@ -1,11 +1,7 @@
 import {
     Button,
     Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
     IconButton,
-    MenuItem,
     styled,
     Switch,
     TextField,
@@ -21,10 +17,9 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import Box from '@mui/material/Box';
 import {
-    COLUMN_TYPE_ICONS,
-    vendorConfig,
+    COLUMN_TYPE_ICONS
 } from '../../../../constants/app.constants';
-import { isEmpty, size } from 'lodash';
+import { size } from 'lodash';
 import AddFilterDialog from './AddFilterDialog';
 import Typography from '@mui/material/Typography';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -41,6 +36,8 @@ const Builder = ({ closeBuilder }) => {
     const [filtersOperation, setFiltersOperation] = useState('AND');
     const [isLimitOn, setIsLimitOn] = useState(false);
     const [limit, setLimit] = useState('');
+    const [orderByDirection, setOrderByDirection] = useState('ASCENDING');
+    const [orderByColumn, setOrderByColumn] = useState('')
     const onDeleteColumn = (id) => () => {
         setColumns((value) => value.filter((v) => v.id !== id));
     };
@@ -192,7 +189,50 @@ const Builder = ({ closeBuilder }) => {
                 close={() => setIsFilterDialogOpen(false)}
                 addFilter={addFilter}
             />
-
+            <HeaderRow>
+                <Typography variant="h6" mr={10}>
+                    Order By:
+                </Typography>
+                <FiltersActions>
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={orderByDirection}
+                        exclusive
+                        onChange={({ target: { value } }) =>
+                            setOrderByDirection(value)
+                        }
+                    >
+                        <ToggleButton value="ASCENDING">Ascending</ToggleButton>
+                        <ToggleButton value="DESCENDING">Descending</ToggleButton>
+                    </ToggleButtonGroup>
+                </FiltersActions>
+            </HeaderRow>
+            <StyledSelect
+                value={orderByColumn}
+                onChange={(e, newValue) => setOrderByColumn(newValue)}
+                options={allColumns}
+                groupBy={(option) => option.tableName}
+                getOptionLabel={(option) => option.name}
+                renderTags={() => null}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                    <TextField {...params} label="Order by" />
+                )}
+                renderOption={(props, option, { selected }) => (
+                    <li
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                        {...props}
+                    >
+                        {COLUMN_TYPE_ICONS[option.type]}
+                        <span style={{ marginLeft: '3px' }}>
+                                    {option.name}
+                                </span>
+                    </li>
+                )}
+            />
         </BuilderContainer>
     );
 };
@@ -218,7 +258,7 @@ const StyledBackButton = styled(Button)`
 const HeaderRow = styled('div')`
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin: 30px 0;
 `;
 
 const FiltersActions = styled('div')`
@@ -238,5 +278,9 @@ const FilterListItem = styled('div')``;
 const StyledTextField = styled(TextField)`
     width: 300px;
 `
+
+const StyledSelect = styled(Autocomplete)`
+    margin-bottom: 20px;
+`;
 
 export default Builder;

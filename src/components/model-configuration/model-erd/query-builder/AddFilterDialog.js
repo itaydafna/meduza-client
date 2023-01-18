@@ -4,21 +4,15 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    MenuItem,
     styled,
     TextField,
 } from '@mui/material';
-import { isEmpty } from 'lodash';
 import React, { useContext, useState } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
-import Checkbox from '@mui/material/Checkbox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import {
     COLUMN_TYPE,
     COLUMN_TYPE_ICONS,
     NUMBER_FILTER_OPERATOR_OPTIONS,
-    NUMBER_FILTER_OPTIONS,
     TEXT_FILTER_OPERATOR_OPTIONS,
 } from '../../../../constants/app.constants';
 import { useAllModelColumns } from '../../../../hooks/tables.hooks';
@@ -63,7 +57,7 @@ const AddFilterDialog = ({ isOpen, close, addFilter }) => {
                         renderTags={() => null}
                         sx={{ width: 300 }}
                         renderInput={(params) => (
-                            <TextField {...params} label="Select Column" />
+                            <TextField {...params} label="Filter by" />
                         )}
                         renderOption={(props, option, { selected }) => (
                             <li
@@ -142,10 +136,5 @@ const StyledSelect = styled(Autocomplete)`
     margin-bottom: 20px;
 `;
 
-const StyledDialogTitle = styled(DialogTitle)`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-`;
 
 export default AddFilterDialog;
