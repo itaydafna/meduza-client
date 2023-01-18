@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Builder from './Builder';
 import {useBuilderContext} from "../../../../hooks/builder.hooks";
 import * as React from "react";
+import {Console} from "./Console";
 
 export const BuilderContext = React.createContext();
 
@@ -29,7 +30,9 @@ const QueryBuilder = () => {
                                 transition: { delay: 0.4, duration: 0.6 },
                             }}
                             key={2}
-                        />
+                        >
+                            <Console/>
+                        </Results>
                     </>
                 ) : null}
             </AnimatePresence>

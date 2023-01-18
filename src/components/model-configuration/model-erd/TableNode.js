@@ -132,7 +132,7 @@ const StyledTargetHandle = styled(Handle)`
         height: 25px;
         content: '';
         top: -11px;
-        left: -12px;
+        left: -10px;
     }
 `;
 
