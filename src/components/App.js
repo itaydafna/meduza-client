@@ -56,6 +56,7 @@ export default function App() {
                                 component="div"
                                 sx={{ flexGrow: 1 }}
                                 fontFamily="Roboto"
+                                fontWeight="1000"
                             >
                                 MEDUZA
                             </Typography>

@@ -31,7 +31,7 @@ const TableNode = memo(({ data, id }) => {
     return (
         <TableNodeContainer>
             <div>
-                <Typography textAlign="center" variant="h5" style={{ fontSize: '20px', color: "white" , fontWeight: 600}}>
+                <Typography textAlign="center" variant="h5" style={{ fontSize: '20px', color: "white" , fontWeight: 500}}>
                     {name}
                 </Typography>
             </div>
@@ -75,6 +75,7 @@ const TableNodeContainer = styled('div')`
     display: flex;
     flex-direction: column;
     background: rgb(85, 108, 214);
+        // rgb(121, 137, 212)
     box-sizing: border-box;
     border: 1px solid gray;
     padding: 5px;
@@ -87,7 +88,7 @@ const TableNodeContainer = styled('div')`
 `;
 
 const TableBody = styled('div')`
-    background: rgb(227, 246, 255, 0.9);
+    background: rgb(245, 246, 252);
     // padding: 16px 0;
     // border-radius: 10px;
     display: flex;
@@ -132,7 +133,7 @@ const StyledTargetHandle = styled(Handle)`
         height: 25px;
         content: '';
         top: -11px;
-        left: -12px;
+        left: -10px;
     }
 `;
 

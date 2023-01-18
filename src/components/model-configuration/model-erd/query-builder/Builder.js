@@ -23,6 +23,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
 import  { BuilderContext } from './QueryBuilder';
 import {generateKipodQuery} from "../../../../utils/app.utils";
+import {Console} from "./Console";
 
 const Builder = () => {
     const builderContext = useContext(BuilderContext);
@@ -122,7 +123,7 @@ const Builder = () => {
                     />
                 ))}
             </Box>
-            <HeaderRow>
+            <HeaderRow data-cy = "headerRow">
                 <Typography variant="h6" mr={1}>
                     Add Filters:
                 </Typography>

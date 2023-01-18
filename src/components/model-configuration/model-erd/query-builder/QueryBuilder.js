@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Builder from './Builder';
 import {useBuilderContext} from "../../../../hooks/builder.hooks";
 import * as React from "react";
+import {Console} from "./Console";
 
 export const BuilderContext = React.createContext();
 
@@ -29,7 +30,9 @@ const QueryBuilder = () => {
                                 transition: { delay: 0.4, duration: 0.6 },
                             }}
                             key={2}
-                        />
+                        >
+                            <Console/>
+                        </Results>
                     </>
                 ) : null}
             </AnimatePresence>
@@ -67,7 +70,8 @@ const StyledFab = styled(Fab)`
 `;
 
 const Results = styled(motion.div)`
-  background: #f5f0f0;
+  background: #f5f5f5;
+  // #f5f0f0;
   position: absolute;
   height: 100%;
   width: 60vw;
