@@ -8,13 +8,13 @@ import { useContext, useState } from 'react';
 import DbtImportButton from './DbtImportButton';
 import AddNewTable from './AddNewTable';
 
-import { AppContext } from '../App';
+import { AppContext, ModelContext } from '../App';
 import Typography from '@mui/material/Typography';
-import VendorImport from "./VendorImport";
-import {VENDORS} from "../../constants/app.constants";
+import VendorImport from './VendorImport';
+import { VENDORS } from '../../constants/app.constants';
+import { useModelsQuery } from '../../hooks/models.hooks';
 
-
-const NewModelLandingPage = () => {
+const NewModelLandingPage = ({}) => {
     const [isShowImportOptions, setIsShowImportOptions] = useState(false);
     const { isPreviewAnimationPlayedOnce, setIsPreviewAnimationPlayedOnce } =
         useContext(AppContext);
@@ -22,32 +22,45 @@ const NewModelLandingPage = () => {
     const theme = useTheme();
     const primaryColor = theme.palette.primary.main;
 
+    const modelId = useContext(ModelContext);
+    const { data: models } = useModelsQuery();
+    const currentModel = models.find((m) => m.id === modelId);
+    const isFirst = currentModel.name === 'Model 1';
+
     return (
         <Container>
             <Content>
-                {
-                //     isPreviewAnimationPlayedOnce ? <Typography
-                //     style={{ fontSize: '2em', color: primaryColor }}
-                // >
-                //     Hello there!
-                // </Typography> :
-                //     (
+                {!isFirst ? (
+                    <Typography
+                        style={{
+                            fontSize: '2em',
+                            color: primaryColor,
+                            fontFamily: 'Courier New',
+                        }}
+                    >
+                        Hello there!
+                    </Typography>
+                ) : (
                     <TypeAnimation
                         sequence={["Hello there! I'm Meduza", 1000]}
                         wrapper="div"
                         cursor={false}
                         repeat={1}
-                        style={{ fontSize: '2em', color: primaryColor, fontFamily: 'Courier New' }}
+                        style={{
+                            fontSize: '2em',
+                            color: primaryColor,
+                            fontFamily: 'Courier New',
+                        }}
                     />
-                }
+                )}
                 <img
                     src={meduzaPlotting}
                     height={250}
                     style={{ display: 'inline-block', margin: '10px 0' }}
                 />
-                {false ? (
+                {!isFirst ? (
                     <Typography
-                        style={{ fontSize: '2em', color: primaryColor }}
+                        style={{ fontSize: '2em', color: primaryColor, fontFamily: 'Courier New' }}
                     >
                         How should we set up your data model?
                     </Typography>
@@ -60,14 +73,20 @@ const NewModelLandingPage = () => {
                         wrapper="div"
                         cursor
                         repeat={1}
-                        style={{ fontSize: '2em', color: primaryColor, fontFamily: 'Courier New' }}
+                        style={{
+                            fontSize: '2em',
+                            color: primaryColor,
+                            fontFamily: 'Courier New',
+                        }}
                     />
                 )}
                 <Actions
-                    animate={true && {
-                        opacity: [0, 1],
-                        transition: { duration: 0.5, delay: 4.5 },
-                    }}
+                    animate={
+                        isFirst && {
+                            opacity: [0, 1],
+                            transition: { duration: 0.5, delay: 4.5 },
+                        }
+                    }
                     onAnimationComplete={() => {
                         setIsPreviewAnimationPlayedOnce(true);
                     }}
@@ -107,7 +126,9 @@ const NewModelLandingPage = () => {
                                                 },
                                             }}
                                         >
-                                            <VendorImport vendor={VENDORS.GENIE}/>
+                                            <VendorImport
+                                                vendor={VENDORS.GENIE}
+                                            />
                                         </motion.div>
                                         <motion.div
                                             key={2}
@@ -127,7 +148,9 @@ const NewModelLandingPage = () => {
                                                 },
                                             }}
                                         >
-                                            <VendorImport vendor={VENDORS.DATORAMA}/>
+                                            <VendorImport
+                                                vendor={VENDORS.DATORAMA}
+                                            />
                                         </motion.div>
                                         <motion.div
                                             key={3}

@@ -4,7 +4,7 @@ import { Button, styled } from '@mui/material';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import {Download} from "@mui/icons-material";
 import {ModelContext} from "../../../App";
-import {downloadDbtModel} from "../../../../services/requests";
+import c from '../../../../assets/this-is-a-test-model.zip'
 
 import { BuilderContext } from './QueryBuilder';
 
