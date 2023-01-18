@@ -29,12 +29,15 @@ const VendorImport = ({ vendor }) => {
     const modelId = useContext(ModelContext);
     const handleClose = () => setIsOpen(false);
 
-    const { data: profiles } = useVendorProfiles(
+    const disableProfilesQuery = () => setShouldFetchProfiles(false);
+
+    const { data: profiles } = useVendorProfiles({
         vendor,
         userName,
         password,
-        shouldFetchProfiles
-    );
+        isEnabled: shouldFetchProfiles,
+        disableProfilesQuery,
+    });
 
     const onPasswordChange = ({ target: { value } }) => {
         setPassword(value);
@@ -47,7 +50,13 @@ const VendorImport = ({ vendor }) => {
         setSelectedProfile(null);
     };
 
-    useImportVendorModel(modelId, isImportVendorModelEnabled);
+    useImportVendorModel({
+        modelId,
+        isEnabled: shouldFetchProfiles,
+        userName,
+        password,
+        profileId: selectedProfile,
+    });
 
     return (
         <>
@@ -114,7 +123,10 @@ const VendorImport = ({ vendor }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Fab color={vendorConfig[vendor].backgroundColor} onClick={() => setIsOpen(true)}>
+            <Fab
+                color={vendorConfig[vendor].backgroundColor}
+                onClick={() => setIsOpen(true)}
+            >
                 <img src={vendorConfig[vendor].iconSrc} height={30}></img>
             </Fab>
         </>

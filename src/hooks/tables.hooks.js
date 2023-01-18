@@ -1,21 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/query-keys.constants';
-import { fetchTables, createTable, updateTable } from '../mock-requests';
-import {set} from "lodash/fp";
+import { createTable } from '../mock-requests';
+import { set } from 'lodash/fp';
+import { getTables, updateTables } from '../services/requests';
 
 export const useTablesQuery = (modelId) => {
     const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
-        fetchTables(modelId)
+        getTables(modelId)
     );
     return query;
 };
 
-export const useTable = (modelId, tableId) =>{
-    const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
-        fetchTables(modelId), {select: (tables)=> tables.find(table=>table.id === tableId)}
+export const useTable = (modelId, tableId) => {
+    const query = useQuery(
+        QUERY_KEYS.TABLES(modelId),
+        () => getTables(modelId),
+        { select: (tables) => tables.find((table) => table.id === tableId) }
     );
     return query;
-}
+};
 
 export const useCreateTableMutation = (modelId) => {
     const queryClient = useQueryClient();
@@ -49,11 +52,11 @@ export const useCreateTableMutation = (modelId) => {
     return mutation;
 };
 
-export const useUpdateTableMutation = (modelId) => {
+export const useUpdateTablesMutation = (modelId) => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
-        mutationFn: updateTable,
-        onMutate: async (table) => {
+        mutationFn: ({ modelId, tables}) => updateTables({ modelId, tables }),
+        onMutate: async ({ modelId, tables }) => {
             await queryClient.cancelQueries({
                 queryKey: QUERY_KEYS.TABLES(modelId),
             });
@@ -62,21 +65,23 @@ export const useUpdateTableMutation = (modelId) => {
                 QUERY_KEYS.TABLES(modelId)
             );
 
-            queryClient.setQueryData(
-                QUERY_KEYS.TABLES(modelId),(old)=>
-                old.map((t) => (t.id === table.id ? table : t))
+            queryClient.setQueryData(QUERY_KEYS.TABLES(modelId), (old) =>
+                old.map((t) => {
+                    const toUpdate = tables.find((table) => table.id === t.id);
+                    return toUpdate || t;
+                })
             );
 
             return { previousTables };
         },
 
-        onError: (err, newTodo, context) => {
+        onError: (err, _, context) => {
             queryClient.setQueryData(
                 QUERY_KEYS.TABLES(modelId),
                 context.previousTables
             );
         },
-        onSettled: (table) => {
+        onSettled: () => {
             queryClient.invalidateQueries({
                 queryKey: QUERY_KEYS.TABLES(modelId),
             });
@@ -86,33 +91,40 @@ export const useUpdateTableMutation = (modelId) => {
     return mutation;
 };
 
-export const useAllModelColumns = (modelId)=>{
-    const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
-        fetchTables(modelId), {select: (tables)=>{
-            const allCols = [];
-            tables.forEach(table=>{
-                table.columns.forEach(col=>{
-                   col.tableId = table.id;
-                   col.tableName = table.name;
-                   allCols.push(col);
+export const useAllModelColumns = (modelId) => {
+    const query = useQuery(
+        QUERY_KEYS.TABLES(modelId),
+        () => getTables(modelId),
+        {
+            select: (tables) => {
+                const allCols = [];
+                tables.forEach((table) => {
+                    table.columns.forEach((col) => {
+                        col.tableId = table.id;
+                        col.tableName = table.name;
+                        allCols.push(col);
+                    });
                 });
-            },)
-            return allCols;
-        }}
+                return allCols;
+            },
+        }
     );
     return query;
-}
+};
 
-export const useTableNameById = (modelId)=>{
-    const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
-        fetchTables(modelId), {select: (tables)=>{
-            let tableNameById = {};
-            tables.forEach(({id,name})=> {
-                tableNameById = set(id, name,tableNameById)
-            });
-            return tableNameById;
-
-        }}
+export const useTableNameById = (modelId) => {
+    const query = useQuery(
+        QUERY_KEYS.TABLES(modelId),
+        () => getTables(modelId),
+        {
+            select: (tables) => {
+                let tableNameById = {};
+                tables.forEach(({ id, name }) => {
+                    tableNameById = set(id, name, tableNameById);
+                });
+                return tableNameById;
+            },
+        }
     );
     return query;
-}
+};

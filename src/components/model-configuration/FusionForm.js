@@ -4,9 +4,13 @@ import { useCallback, useContext, useState } from 'react';
 import { useTable } from '../../hooks/tables.hooks';
 import {
     Button,
-    FormControl, FormControlLabel, FormLabel,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
     IconButton,
-    MenuItem, Radio, RadioGroup,
+    MenuItem,
+    Radio,
+    RadioGroup,
     Select,
     styled,
     TextField,
@@ -54,7 +58,7 @@ const FusionForm = ({ fusionsId }) => {
             sourceColumn,
             targetColumn,
         };
-        updateFusion(fusionToUpdate);
+        updateFusion({ fusion: fusionToUpdate, modelId });
     }, [
         fusionsId,
         joinType,
@@ -105,14 +109,30 @@ const FusionForm = ({ fusionsId }) => {
 
             <div style={{ display: 'flex' }}>
                 <FormControl>
-                    <FormLabel id="demo-row-radio-buttons-group-label">Join Type</FormLabel>
-                    <RadioGroup
-                        row
-                    >
-                        <FormControlLabel value={JOIN_TYPE.INNER} control={<Radio />} label="Inner"></FormControlLabel>
-                        <FormControlLabel value={JOIN_TYPE.LEFT} control={<Radio />} label="Left" />
-                        <FormControlLabel value={JOIN_TYPE.RIGHT} control={<Radio />} label="Right" />
-                        <FormControlLabel value={JOIN_TYPE.FULL} control={<Radio />} label="Full" />
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                        Join Type
+                    </FormLabel>
+                    <RadioGroup row>
+                        <FormControlLabel
+                            value={JOIN_TYPE.INNER}
+                            control={<Radio />}
+                            label="Inner"
+                        ></FormControlLabel>
+                        <FormControlLabel
+                            value={JOIN_TYPE.LEFT}
+                            control={<Radio />}
+                            label="Left"
+                        />
+                        <FormControlLabel
+                            value={JOIN_TYPE.RIGHT}
+                            control={<Radio />}
+                            label="Right"
+                        />
+                        <FormControlLabel
+                            value={JOIN_TYPE.FULL}
+                            control={<Radio />}
+                            label="Full"
+                        />
                     </RadioGroup>
                 </FormControl>
             </div>

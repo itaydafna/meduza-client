@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/query-keys.constants';
-import { createFusion, fetchFusions, updateFusion } from '../mock-requests';
+import { createFusion } from '../mock-requests';
 import {useEffect, useState} from 'react';
 import { isEmpty, set } from 'lodash/fp';
+import {getFusions, updateFusion} from "../services/requests";
 
 export const useFusionsQuery = (modelId) => {
     const query = useQuery(QUERY_KEYS.FUSIONS(modelId), () =>
-        fetchFusions(modelId)
+        getFusions(modelId)
     );
     return query;
 };
@@ -14,7 +15,7 @@ export const useFusionsQuery = (modelId) => {
 export const useFusion = (modelId, fusionId) => {
     const query = useQuery(
         QUERY_KEYS.FUSIONS(modelId),
-        () => fetchFusions(modelId),
+        () => getFusions(modelId),
         {
             select: (fusions) =>
                 fusions.find((fusion) => fusion.id === fusionId),
@@ -26,8 +27,8 @@ export const useFusion = (modelId, fusionId) => {
 export const useCreateFusionMutation = (modelId) => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
-        mutationFn: createFusion,
-        onMutate: async (newFusion) => {
+        mutationFn: ({modelId, fusion})=> updateFusion({modelId, join: fusion}),
+        onMutate: async ({fusion}) => {
             await queryClient.cancelQueries({
                 queryKey: QUERY_KEYS.FUSIONS(modelId),
             });
@@ -36,7 +37,7 @@ export const useCreateFusionMutation = (modelId) => {
             ]);
             queryClient.setQueryData(QUERY_KEYS.FUSIONS(modelId), (old) => [
                 ...old,
-                newFusion,
+                fusion,
             ]);
             return { previousFusions };
         },
@@ -58,8 +59,8 @@ export const useCreateFusionMutation = (modelId) => {
 export const useUpdateFusionMutation = (modelId) => {
     const queryClient = useQueryClient();
     const mutation = useMutation({
-        mutationFn: updateFusion,
-        onMutate: async (fusion) => {
+        mutationFn:({modelId, fusion})=> updateFusion({modelId, join: fusion}),
+        onMutate: async ({fusion}) => {
             await queryClient.cancelQueries({
                 queryKey: QUERY_KEYS.FUSIONS(modelId),
             });
@@ -75,13 +76,13 @@ export const useUpdateFusionMutation = (modelId) => {
             return { previousFusions };
         },
 
-        onError: (err, newTodo, context) => {
+        onError: (err, _, context) => {
             queryClient.setQueryData(
                 QUERY_KEYS.FUSIONS(modelId),
                 context.previousFusions
             );
         },
-        onSettled: (table) => {
+        onSettled: () => {
             queryClient.invalidateQueries({
                 queryKey: QUERY_KEYS.FUSIONS(modelId),
             });
@@ -94,7 +95,7 @@ export const useUpdateFusionMutation = (modelId) => {
 export const useTableDependencies = (modelId) => {
     const [tableDependencies, setTableDependencies] = useState({});
     const { data: fusions } = useQuery(QUERY_KEYS.FUSIONS(modelId), () =>
-        fetchFusions(modelId)
+        getFusions(modelId)
     );
 
     useEffect(()=>{

@@ -1,4 +1,5 @@
 import { random, groupBy,flow } from 'lodash/fp';
+import {map, values} from "lodash";
 
 export const transformTableToNode = (table) => ({
     id: table.id,
@@ -18,9 +19,6 @@ export const transformNodeToTable = (node, modelId) => ({
 
 
 export const generateKipodQuery = ({modelId,columns, filters, filtersOperation,limit, orderByDirection,orderByColumn, tableNameById})=>{
-
-    console.log(flow([groupBy('tableId')])(columns));
-
     return {
         modelId,
         limit,
@@ -35,10 +33,10 @@ export const generateKipodQuery = ({modelId,columns, filters, filtersOperation,l
             booleanOperator: filtersOperation
         },
         orderBy:{tableName: tableNameById[orderByColumn.tableId], columnName: orderByColumn.name, order: orderByDirection},
-        selectedTables: columns.map((col)=>({
-            tableId: col.tableId,
-            selectedColumn: flow([groupBy('tableId')])(columns)
-        }))
+        // selectedTables: columns.map((col)=>({
+        //     tableId: col.tableId,
+        //     selectedColumn: flow([groupBy('tableId'), values,map(({})=>)])(columns)
+        // }))
     }
 
 }

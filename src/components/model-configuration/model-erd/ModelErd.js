@@ -14,9 +14,9 @@ import { v4 as uuidv4 } from 'uuid';
 import ButtonEdge from './ButtonEdge';
 import {
     useTablesQuery,
-    useUpdateTableMutation,
+    useUpdateTablesMutation,
 } from '../../../hooks/tables.hooks';
-import { noop } from 'lodash';
+import { noop, size } from 'lodash';
 import {
     useCreateFusionMutation,
     useFusionsQuery,
@@ -33,7 +33,7 @@ import TableNode from './TableNode';
 import { styled } from '@mui/material';
 import AddNewTable from '../AddNewTable';
 import QueryBuilder from './query-builder/QueryBuilder';
-import {AnimatePresence, motion} from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const nodeTypes = {
     tableNode: TableNode,
@@ -68,22 +68,27 @@ const ModelErd = () => {
             const id = uuidv4();
             setSelectedEdge(id);
             createFusion({
-                id,
-                joinType: JOIN_TYPE.INNER,
-                sourceTable: source,
-                targetTable: target,
-                sourceColumn: sourceHandle,
-                targetColumn: targetHandle,
+                fusion: {
+                    id,
+                    joinType: JOIN_TYPE.INNER,
+                    sourceTable: source,
+                    targetTable: target,
+                    sourceColumn: sourceHandle,
+                    targetColumn: targetHandle,
+                    modelId,
+                },
                 modelId,
             });
         },
         [createFusion, modelId, setEdges]
     );
 
+    const { mutate: updateTables } = useUpdateTablesMutation(modelId);
+
     useEffect(() => {
         if (!tables) return;
 
-        const { nodes } = tables.reduce(
+        const { nodes, tablesToBatchUpdate } = tables.reduce(
             (acc, table) => {
                 const node = transformTableToNode(table);
                 if (!table.nodePosition) {
@@ -99,8 +104,12 @@ const ModelErd = () => {
             }
         );
 
+        if (size(tablesToBatchUpdate)) {
+            updateTables({ modelId, tables: tablesToBatchUpdate });
+        }
+
         setNodes(nodes);
-    }, [setNodes, tables]);
+    }, [modelId, setNodes, tables, updateTables]);
 
     useEffect(() => {
         if (!fusions) return;
@@ -125,14 +134,12 @@ const ModelErd = () => {
         setEdges(edges);
     }, [fusions, selectedEdge, setEdges]);
 
-    const { mutate: updateTable } = useUpdateTableMutation(modelId);
-
     const onNodeDragStop = useCallback(
         (_, node) => {
             const table = transformNodeToTable(node, modelId);
-            updateTable(table);
+            updateTables({ modelId, tables: [table] });
         },
-        [modelId, updateTable]
+        [modelId, updateTables]
     );
 
     const onConnectionStart = (event, { nodeId, handleId }) => {
@@ -172,18 +179,26 @@ const ModelErd = () => {
                             onNodeDragStart={noop}
                             onNodeDragStop={onNodeDragStop}
                             onConnectStart={onConnectionStart}
-                            onConnectEnd={onConnectEnd}>
+                            onConnectEnd={onConnectEnd}
+                        >
                             <Background />
                             <Controls />
                         </StyledReactFlow>
                     </FlexWrapper>
                 </ReactFlowProvider>
                 <AnimatePresence initial={false}>
-                    { isBuilderOpen ? null :  <motion.div key={4} initial={{opacity: 0}} animate={{ opacity: 1, transition: { delay: 1 }}} exit={{opacity: 0}}>
-                        <AddTableContainer>
-                            <AddNewTable isErdPage />
-                        </AddTableContainer>
-                    </motion.div>}
+                    {isBuilderOpen ? null : (
+                        <motion.div
+                            key={4}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1, transition: { delay: 1 } }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <AddTableContainer>
+                                <AddNewTable isErdPage />
+                            </AddTableContainer>
+                        </motion.div>
+                    )}
                 </AnimatePresence>
                 <QueryBuilder />
             </Container>
@@ -204,8 +219,9 @@ const FlexWrapper = styled('div')`
 const StyledReactFlow = styled(ReactFlow)`
     text-color: rgb(243, 244, 246);
     node-border-radius: 10px;
-    node-box-shadow: 10px 0 15px rgba(42, 138, 246, 0.3), -10px 0 15px rgba(233, 42, 103, 0.3);
-    background-color:rgb(241, 246, 245);
+    node-box-shadow: 10px 0 15px rgba(42, 138, 246, 0.3),
+        -10px 0 15px rgba(233, 42, 103, 0.3);
+    background-color: rgb(241, 246, 245);
     // rgb(184, 206, 255)
 `;
 

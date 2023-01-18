@@ -84,16 +84,16 @@ export function createTable(newTable) {
     });
 }
 
-export function updateTable(tableToUpdate) {
-    return new Promise((resolve) => {
-        TABLES = TABLES.map((table) =>
-            table.id === tableToUpdate.id ? tableToUpdate : table
-        );
-        setTimeout(() => {
-            resolve();
-        }, 1000);
-    });
-}
+// export function updateTable(tableToUpdate) {
+//     return new Promise((resolve) => {
+//         TABLES = TABLES.map((table) =>
+//             table.id === tableToUpdate.id ? tableToUpdate : table
+//         );
+//         setTimeout(() => {
+//             resolve();
+//         }, 1000);
+//     });
+// }
 
 export function batchUpdateTables(tablesToUpdate) {
     return new Promise((resolve) => {

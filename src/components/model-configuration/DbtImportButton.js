@@ -5,18 +5,27 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useImportDbtModel } from '../../hooks/import.hooks';
 import { useContext, useState } from 'react';
 import { ModelContext } from '../App';
+import { loadDbtModel } from '../../services/requests';
 
 const DbtImportButton = () => {
     const [isDbtQueryEnabled, setIsDbtQueryEnabled] = useState(false);
 
+    const disableDbtQuery = () => setIsDbtQueryEnabled(false);
+
     const modelId = useContext(ModelContext);
 
-    const { isLoading } = useImportDbtModel(modelId, isDbtQueryEnabled);
-
     const [dbtPopoverAnchorEl, setDbtPopoverAnchor] = useState(null);
-    const [dbtFile, setDbtFile] = useState('');
+    const [dbtInput, setDbtInput] = useState('');
+    const [dbtFile, setDbtFile] = useState(null);
 
-    const onDbtFileInput = ({ target: { value } }) => setDbtFile(value);
+    const { isLoading } = useImportDbtModel({
+        modelId,
+        isEnabled: !!isDbtQueryEnabled && !!dbtFile,
+        dbtFile,
+        disableDbtQuery
+    });
+
+    const onDbtFileInput = ({ target: { value } }) => setDbtInput(value);
 
     const handleDbtPopoverOpen = (event) => {
         setDbtPopoverAnchor(event.currentTarget);
@@ -30,11 +39,13 @@ const DbtImportButton = () => {
 
     const closeDbtPopover = () => {
         setDbtPopoverAnchor(null);
-        setDbtFile('');
+        setDbtInput('');
     };
 
-    const onDbtSubmit = () => {
+    const onDbtSubmit = (e) => {
+        e.preventDefault();
         closeDbtPopover();
+        setDbtFile(e.target.dbt.files[0]);
         setIsDbtQueryEnabled(true);
     };
     return (
@@ -55,7 +66,7 @@ const DbtImportButton = () => {
                     horizontal: 'center',
                 }}
             >
-                <DbtFormContainer>
+                <DbtFormContainer onSubmit={onDbtSubmit}>
                     <Typography
                         sx={{ p: 2 }}
                         variant="subtitle1"
@@ -67,12 +78,18 @@ const DbtImportButton = () => {
 
                     <Button variant="outlined" component="label">
                         <Badge
-                            badgeContent={!!dbtFile ? 1 : null}
+                            badgeContent={!!dbtInput ? 1 : null}
                             color="success"
                         >
                             <UploadFileIcon />
                         </Badge>
-                        <input type="file" hidden onChange={onDbtFileInput} />
+                        <input
+                            type="file"
+                            accept=".yml"
+                            hidden
+                            onChange={onDbtFileInput}
+                            id="dbt"
+                        />
                     </Button>
                     <div
                         style={{
@@ -92,7 +109,7 @@ const DbtImportButton = () => {
                             textAlign="center"
                             noWrap
                         >
-                            {dbtFile.substring(dbtFile.lastIndexOf('\\') + 1)}
+                            {dbtInput.substring(dbtInput.lastIndexOf('\\') + 1)}
                         </Typography>
                     </div>
                     <DbtFormActions>
@@ -100,9 +117,9 @@ const DbtImportButton = () => {
                             Cancel
                         </Button>
                         <Button
-                            disabled={!dbtFile}
+                            disabled={!dbtInput}
                             variant="contained"
-                            onClick={onDbtSubmit}
+                            type="submit"
                         >
                             Submit
                         </Button>
@@ -113,7 +130,7 @@ const DbtImportButton = () => {
     );
 };
 
-const DbtFormContainer = styled('div')`
+const DbtFormContainer = styled('form')`
     display: flex;
     flex-direction: column;
     align-items: center;
