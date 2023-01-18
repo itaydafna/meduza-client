@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/query-keys.constants';
 import { fetchTables, createTable, updateTable } from '../mock-requests';
+import {set} from "lodash/fp";
 
 export const useTablesQuery = (modelId) => {
     const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
@@ -97,6 +98,20 @@ export const useAllModelColumns = (modelId)=>{
                 });
             },)
             return allCols;
+        }}
+    );
+    return query;
+}
+
+export const useTableNameById = (modelId)=>{
+    const query = useQuery(QUERY_KEYS.TABLES(modelId), () =>
+        fetchTables(modelId), {select: (tables)=>{
+            let tableNameById = {};
+            tables.forEach(({id,name})=> {
+                tableNameById = set(id, name,tableNameById)
+            });
+            return tableNameById;
+
         }}
     );
     return query;

@@ -22,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
 import  { BuilderContext } from './QueryBuilder';
+import {generateKipodQuery} from "../../../../utils/app.utils";
 
 const Builder = () => {
     const builderContext = useContext(BuilderContext);
@@ -47,8 +48,11 @@ const Builder = () => {
         setIsFilterDialogOpen,
         onDeleteFilter,
         addFilter,
-        isBuilderOpen
+        isBuilderOpen,
+        onGenerateQuery
     } = builderContext;
+
+
 
     return (
         <BuilderContainer
@@ -233,7 +237,7 @@ const Builder = () => {
             />
             <AnimatePresence initial={false}>
                 { isBuilderOpen ?   <motion.div key={5} initial={{opacity: 0}} animate={{ opacity: 1, transition: { delay: 1 }}} exit={{opacity: 0}}>
-                    <StyledFab color="primary">Run</StyledFab>
+                    <StyledFab color="primary" onClick={onGenerateQuery}>Run</StyledFab>
                 </motion.div>: null}
             </AnimatePresence>
         </BuilderContainer>

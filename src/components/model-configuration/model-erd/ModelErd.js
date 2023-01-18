@@ -26,7 +26,7 @@ import { JOIN_TYPE } from '../../../constants/app.constants';
 import {
     transformNodeToTable,
     transformTableToNode,
-} from '../../../utils/entities.utils';
+} from '../../../utils/app.utils';
 import { ModelContext } from '../../App';
 
 import TableNode from './TableNode';

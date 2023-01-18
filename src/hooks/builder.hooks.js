@@ -1,12 +1,14 @@
 import { ModelContext } from '../components/App';
-import { useAllModelColumns } from './tables.hooks';
+import {useAllModelColumns, useTableNameById} from './tables.hooks';
 import { ModelErdContext } from '../components/model-configuration/model-erd/ModelErd';
 import { useContext, useState } from 'react';
+import {generateKipodQuery} from "../utils/app.utils";
 
 export const useBuilderContext = () => {
     const { isBuilderOpen, setIsBuilderOpen } = useContext(ModelErdContext);
     const closeBuilder = () => setIsBuilderOpen(false);
     const modelId = useContext(ModelContext);
+    const tableNameById = useTableNameById(modelId)
 
     const { data: allColumns } = useAllModelColumns(modelId);
 
@@ -29,6 +31,10 @@ export const useBuilderContext = () => {
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
 
     const addFilter = (filter) => setFilters((prev) => [...prev, filter]);
+
+    const onGenerateQuery = ()=>{
+        generateKipodQuery({modelId, columns, filters, filtersOperation, limit, orderByDirection, orderByColumn, tableNameById})
+    }
 
     return {
         isBuilderOpen,
@@ -53,5 +59,6 @@ export const useBuilderContext = () => {
         setIsFilterDialogOpen,
         onDeleteFilter,
         addFilter,
+        onGenerateQuery
     };
 };

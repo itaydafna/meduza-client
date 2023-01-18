@@ -55,6 +55,7 @@ const QueryBuilder = () => {
     );
 };
 
+
 const StyledFab = styled(Fab)`
     position: absolute;
     left: 50%;
