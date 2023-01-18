@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button, styled} from "@mui/material";
 import copyIcon from '../../../../assets/copy.svg';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
 import {Download} from "@mui/icons-material";
+import {ModelContext} from "../../../App";
+import {downloadDbtModel} from "../../../../services/requests";
+import {generateKipodQuery} from "../../../../utils/app.utils";
 
 
 export function Console() {
+    const modelId = useContext(ModelContext);
     const [code, setCode] = React.useState(
         `SELECT * FROM table`
     );
@@ -33,15 +37,11 @@ export function Console() {
                 console.log(err);
             });
     }
-    //
-    //
-    // async function downloadDbt() {
-    //     console.log(modelId);
-    //     downloadDbtModel(modelId);
-    // }
-    //
+
     const handleDbtClick = () => {
-        //downloadDbt();
+        //const query = generateKipodQuery({modelId, columns, filters, filtersOperation, limit, orderByDirection, orderByColumn, tableNameById})
+        console.log(modelId);
+        downloadDbtModel(modelId, null).then(console.log);
     }
 
     // function ClipboardCopy() {

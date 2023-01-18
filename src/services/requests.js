@@ -31,16 +31,6 @@ export async function loadCDPModel({ email, password, modelId }) {
     return res.data;
 }
 
-
-export async function downloadDbtModel(modelId) {
-    const res = await axios.post(
-        `${BASE}/models/${modelId}/dbt/export`,
-        { }
-    );
-
-    return res.data;
-}
-
 export async function getTables(modelId) {
     const res = await axios.get(
         `${BASE}/model/tables?modelInstanceId=${modelId}`,
@@ -92,6 +82,15 @@ export async function runQuery(queryPayload) {
         `${BASE}/query`,
         queryPayload
     );
+    return res.data;
+}
+
+export async function downloadDbtModel({modelId, queryPayload}) {
+    const res = await axios.post(
+        `${BASE}/models/${modelId}/dbt/export`,
+        queryPayload
+    );
+
     return res.data;
 }
 
