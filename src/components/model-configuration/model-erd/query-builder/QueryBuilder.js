@@ -1,15 +1,17 @@
 import { Fab, styled } from '@mui/material';
 import meduzaWizard from '../../../../assets/meduza-wizard.png';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useContext, useState } from 'react';
 import Builder from './Builder';
-import { ModelErdContext } from '../ModelErd';
+import {useBuilderContext} from "../../../../hooks/builder.hooks";
+import * as React from "react";
+
+export const BuilderContext = React.createContext();
 
 const QueryBuilder = () => {
-    const { isBuilderOpen, setIsBuilderOpen } = useContext(ModelErdContext);
-    const closeBuilder = () => setIsBuilderOpen(false);
+    const builderContextValue = useBuilderContext();
+    const {closeBuilder, isBuilderOpen, setIsBuilderOpen} = builderContextValue;
     return (
-        <>
+        <BuilderContext.Provider value={builderContextValue}>
             <AnimatePresence>
                 {isBuilderOpen ? (
                     <>
@@ -49,7 +51,7 @@ const QueryBuilder = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </>
+        </BuilderContext.Provider>
     );
 };
 

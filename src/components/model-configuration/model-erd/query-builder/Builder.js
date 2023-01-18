@@ -8,47 +8,45 @@ import {
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useAllModelColumns } from '../../../../hooks/tables.hooks';
-import React, { useContext, useState } from 'react';
-import { ModelContext } from '../../../App';
+import React, { useContext } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import Box from '@mui/material/Box';
-import {
-    COLUMN_TYPE_ICONS
-} from '../../../../constants/app.constants';
+import { COLUMN_TYPE_ICONS } from '../../../../constants/app.constants';
 import { size } from 'lodash';
 import AddFilterDialog from './AddFilterDialog';
 import Typography from '@mui/material/Typography';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
+import { BuilderContext } from './QueryBuilder';
 
-const Builder = ({ closeBuilder }) => {
-    const modelId = useContext(ModelContext);
+const Builder = () => {
+    const builderContext = useContext(BuilderContext);
 
-    const { data: allColumns } = useAllModelColumns(modelId);
-
-    const [columns, setColumns] = useState([]);
-
-    const [filters, setFilters] = useState([]);
-    const [filtersOperation, setFiltersOperation] = useState('AND');
-    const [isLimitOn, setIsLimitOn] = useState(false);
-    const [limit, setLimit] = useState('');
-    const [orderByDirection, setOrderByDirection] = useState('ASCENDING');
-    const [orderByColumn, setOrderByColumn] = useState('')
-    const onDeleteColumn = (id) => () => {
-        setColumns((value) => value.filter((v) => v.id !== id));
-    };
-
-    const onDeleteFilter = (id) => () => {
-        setFilters((value) => value.filter((v) => v.id !== id));
-    };
-
-    const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
-
-    const addFilter = (filter) => setFilters((prev) => [...prev, filter]);
+    const {
+        closeBuilder,
+        allColumns,
+        columns,
+        setColumns,
+        filters,
+        filtersOperation,
+        setFiltersOperation,
+        isLimitOn,
+        setIsLimitOn,
+        limit,
+        setLimit,
+        orderByDirection,
+        setOrderByDirection,
+        orderByColumn,
+        setOrderByColumn,
+        onDeleteColumn,
+        isFilterDialogOpen,
+        setIsFilterDialogOpen,
+        onDeleteFilter,
+        addFilter,
+    } = builderContext;
 
     return (
         <BuilderContainer
@@ -179,9 +177,7 @@ const Builder = ({ closeBuilder }) => {
                 label="Limit"
                 type="number"
                 value={limit}
-                onChange={({ target: { value } }) =>
-                    setLimit(value)
-                }
+                onChange={({ target: { value } }) => setLimit(value)}
             />
 
             <AddFilterDialog
@@ -203,7 +199,9 @@ const Builder = ({ closeBuilder }) => {
                         }
                     >
                         <ToggleButton value="ASCENDING">Ascending</ToggleButton>
-                        <ToggleButton value="DESCENDING">Descending</ToggleButton>
+                        <ToggleButton value="DESCENDING">
+                            Descending
+                        </ToggleButton>
                     </ToggleButtonGroup>
                 </FiltersActions>
             </HeaderRow>
@@ -212,7 +210,7 @@ const Builder = ({ closeBuilder }) => {
                 onChange={(e, newValue) => setOrderByColumn(newValue)}
                 options={allColumns}
                 groupBy={(option) => option.tableName}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option?.name || ''}
                 renderTags={() => null}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
@@ -227,9 +225,7 @@ const Builder = ({ closeBuilder }) => {
                         {...props}
                     >
                         {COLUMN_TYPE_ICONS[option.type]}
-                        <span style={{ marginLeft: '3px' }}>
-                                    {option.name}
-                                </span>
+                        <span style={{ marginLeft: '3px' }}>{option.name}</span>
                     </li>
                 )}
             />
@@ -277,7 +273,7 @@ const FilterListItem = styled('div')``;
 
 const StyledTextField = styled(TextField)`
     width: 300px;
-`
+`;
 
 const StyledSelect = styled(Autocomplete)`
     margin-bottom: 20px;
