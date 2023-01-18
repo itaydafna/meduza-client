@@ -63,7 +63,9 @@ export function Console() {
                     fontFamily:
                         'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
                     borderRadius: '8px',
-                    height: '900px',
+                    height: '700x',
+                    paddingLeft: '50px',
+                    overflowY: 'auto'
                 }}
             />
             <StyledCopyButton onClick={() => handleCopyClick()}>
