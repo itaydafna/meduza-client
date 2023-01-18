@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Button, styled } from '@mui/material';
 import ContentCopy from '@mui/icons-material/ContentCopy';
@@ -13,6 +13,8 @@ export function Console() {
     const { querySql } = useContext(BuilderContext);
     const [code, setCode] = React.useState(querySql);
     const [isCopied, setIsCopied] = React.useState(false);
+
+    const downloadRef = useRef();
 
     useEffect(() => {
         setCode(querySql);
@@ -41,7 +43,8 @@ export function Console() {
 
     const handleDbtClick = () => {
         //const query = generateKipodQuery({modelId, columns, filters, filtersOperation, limit, orderByDirection, orderByColumn, tableNameById})
-        downloadDbtModel(modelId, null).then(console.log);
+        // downloadDbtModel(modelId, null).then(console.log);
+        downloadRef.current?.click();
     }
 
 
@@ -71,6 +74,7 @@ export function Console() {
             }>
                 <span>{'EXPORT TO DBT MODEL'}</span>
                 {<Download/>}
+                <a style={{visibility: 'hidden'}} href={'../../../../assets/this-is-a-test-model.zip'} ref={downloadRef} download>Download Img</a>
             </StyledDbtButton>
         </div>
     );
