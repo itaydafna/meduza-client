@@ -1,6 +1,6 @@
 import { useFusion, useUpdateFusionMutation } from '../../hooks/fusions.hooks';
 import { ModelContext } from '../App';
-import { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useTable } from '../../hooks/tables.hooks';
 import {
     Button,
@@ -24,6 +24,7 @@ import JoinInnerIcon from '@mui/icons-material/JoinInner';
 import JoinLeftIcon from '@mui/icons-material/JoinLeft';
 import JoinRightIcon from '@mui/icons-material/JoinRight';
 import JoinFullIcon from '@mui/icons-material/JoinFull';
+import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
 
 const FusionForm = ({ fusionsId }) => {
     const modelId = useContext(ModelContext);
@@ -112,31 +113,32 @@ const FusionForm = ({ fusionsId }) => {
                     <FormLabel id="demo-row-radio-buttons-group-label">
                         Join Type
                     </FormLabel>
-                    <RadioGroup row>
-                        <FormControlLabel
-                            value={JOIN_TYPE.INNER}
-                            control={<Radio />}
-                            label="Inner"
-                        ></FormControlLabel>
-                        <FormControlLabel
-                            value={JOIN_TYPE.LEFT}
-                            control={<Radio />}
-                            label="Left"
-                        />
-                        <FormControlLabel
-                            value={JOIN_TYPE.RIGHT}
-                            control={<Radio />}
-                            label="Right"
-                        />
-                        <FormControlLabel
-                            value={JOIN_TYPE.FULL}
-                            control={<Radio />}
-                            label="Full"
-                        />
-                    </RadioGroup>
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={fusion.joinType}
+                        exclusive
+                        onChange={({ target: { value } }) => setJoinType(value)}
+                        aria-label="Platform"
+                    >
+                        <ToggleButton value={JOIN_TYPE.INNER}>
+                            Inner
+                        </ToggleButton>
+                        <ToggleButton value={JOIN_TYPE.FULL}>Full</ToggleButton>
+                        <ToggleButton value={JOIN_TYPE.LEFT}>Left</ToggleButton>
+                        <ToggleButton value={JOIN_TYPE.RIGHT}>
+                            Right
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 </FormControl>
             </div>
-            <div>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '80%',
+                }}
+            >
+                <Button onClick={onSubmit}>Cancel</Button>
                 <Button onClick={onSubmit}>Submit</Button>
             </div>
         </Container>

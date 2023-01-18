@@ -61,9 +61,9 @@ export default function ButtonEdge({
                 className="edgebutton-foreignobject"
                 requiredExtensions="http://www.w3.org/1999/xhtml"
             >
-                <div ref={anchorElementRef} style={{ position: 'relative' }}>
-                    <IconButton color="primary">
-                        <JoinInnerIcon />
+                <div ref={anchorElementRef} style={{ position: 'relative', borderRadius: '50%' }}>
+                    <IconButton color="primary" size="large" >
+                        <JoinInnerIcon fontSize="inherit" />
                     </IconButton>
                 </div>
                 <Popper
