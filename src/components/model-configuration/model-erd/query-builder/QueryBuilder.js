@@ -70,7 +70,8 @@ const StyledFab = styled(Fab)`
 `;
 
 const Results = styled(motion.div)`
-  background: #f5f0f0;
+  background: #f5f5f5;
+  // #f5f0f0;
   position: absolute;
   height: 100%;
   width: 60vw;
