@@ -41,7 +41,6 @@ export function Console() {
 
     const handleDbtClick = () => {
         //const query = generateKipodQuery({modelId, columns, filters, filtersOperation, limit, orderByDirection, orderByColumn, tableNameById})
-        console.log(modelId);
         downloadDbtModel(modelId, null).then(console.log);
     }
 

@@ -10,13 +10,16 @@ import {
     TextField,
 } from '@mui/material';
 import React, { useContext, useState } from 'react';
-import { vendorConfig } from '../../constants/app.constants';
+import { vendorConfig, VENDORS } from '../../constants/app.constants';
 import {
     useImportVendorModel,
     useVendorProfiles,
 } from '../../hooks/import.hooks';
 import { isEmpty } from 'lodash';
 import { ModelContext } from '../App';
+import {loadCDPModel, loadDtrModel} from '../../services/requests';
+import {useQueryClient} from "@tanstack/react-query";
+import {QUERY_KEYS} from "../../constants/query-keys.constants";
 
 const VendorImport = ({ vendor }) => {
     const [password, setPassword] = useState('');
@@ -50,13 +53,31 @@ const VendorImport = ({ vendor }) => {
         setSelectedProfile(null);
     };
 
-    useImportVendorModel({
-        modelId,
-        isEnabled: shouldFetchProfiles,
-        userName,
-        password,
-        profileId: selectedProfile,
-    });
+    const queryClient = useQueryClient();
+
+
+
+    const fetchDatoramaModel = () =>
+        loadDtrModel({
+            email: userName,
+            password,
+            profileId: selectedProfile,
+            modelId,
+        }).then(()=>{
+            queryClient.invalidateQueries(QUERY_KEYS.TABLES(modelId));
+            queryClient.invalidateQueries(QUERY_KEYS.FUSIONS(modelId));
+        });
+
+    const fetchCBT = ()=>{
+        loadCDPModel({email: userName, password, modelId}).then(()=>{
+            queryClient.invalidateQueries(QUERY_KEYS.TABLES(modelId));
+            queryClient.invalidateQueries(QUERY_KEYS.FUSIONS(modelId));
+        })
+    }
+
+    const onSubmit = ()=>{
+        vendor === VENDORS.DATORAMA ? fetchDatoramaModel() : fetchCBT()
+    }
 
     return (
         <>
@@ -83,30 +104,34 @@ const VendorImport = ({ vendor }) => {
                             variant="outlined"
                             fullWidth
                         />
-                        <Button
-                            variant="outlined"
-                            style={{ width: 180, marginBottom: 25 }}
-                            disabled={!(userName && password)}
-                            onClick={() => setShouldFetchProfiles(true)}
-                        >
-                            Get Profiles
-                        </Button>
-                        {shouldFetchProfiles && !isEmpty(profiles) && (
-                            <StyledSelect
-                                select
-                                // value={selectedProfile}
-                                onChange={({ target: { value } }) =>
-                                    setSelectedProfile(value)
-                                }
-                                label="Profiles"
+                        {vendor !== VENDORS.GENIE && (
+                            <Button
+                                variant="outlined"
+                                style={{ width: 180, marginBottom: 25 }}
+                                disabled={!(userName && password)}
+                                onClick={() => setShouldFetchProfiles(true)}
                             >
-                                {profiles.map(({ name, id }) => (
-                                    <MenuItem key={id} value={id}>
-                                        {name}
-                                    </MenuItem>
-                                ))}
-                            </StyledSelect>
+                                Get Profiles
+                            </Button>
                         )}
+                        {shouldFetchProfiles &&
+                            !isEmpty(profiles) &&
+                            vendor !== VENDORS.GENIE && (
+                                <StyledSelect
+                                    select
+                                    // value={selectedProfile}
+                                    onChange={({ target: { value } }) =>
+                                        setSelectedProfile(value)
+                                    }
+                                    label="Profiles"
+                                >
+                                    {profiles.map(({ name, id }) => (
+                                        <MenuItem key={id} value={id}>
+                                            {name}
+                                        </MenuItem>
+                                    ))}
+                                </StyledSelect>
+                            )}
                     </FormContainer>
                 </DialogContent>
                 <DialogActions>
@@ -116,8 +141,12 @@ const VendorImport = ({ vendor }) => {
                     <Button
                         variant="contained"
                         color={'primary'}
-                        disabled={!selectedProfile}
-                        onClick={() => setIsImportVendorModelEnabled(true)}
+                        disabled={
+                            vendor === VENDORS.DATORAMA
+                                ? !selectedProfile
+                                : !(!!userName && !!password)
+                        }
+                        onClick={onSubmit}
                     >
                         Submit
                     </Button>

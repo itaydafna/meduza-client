@@ -64,7 +64,7 @@ const NewModelLandingPage = () => {
                     />
                 )}
                 <Actions
-                    animate={false && {
+                    animate={true && {
                         opacity: [0, 1],
                         transition: { duration: 0.5, delay: 4.5 },
                     }}
