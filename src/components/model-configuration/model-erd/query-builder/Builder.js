@@ -22,8 +22,6 @@ import Typography from '@mui/material/Typography';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
 import  { BuilderContext } from './QueryBuilder';
-import {generateKipodQuery} from "../../../../utils/app.utils";
-import {Console} from "./Console";
 
 const Builder = () => {
     const builderContext = useContext(BuilderContext);
@@ -205,8 +203,8 @@ const Builder = () => {
                             setOrderByDirection(value)
                         }
                     >
-                        <ToggleButton value="ASCENDING">Ascending</ToggleButton>
-                        <ToggleButton value="DESCENDING">
+                        <ToggleButton value="ASC">Ascending</ToggleButton>
+                        <ToggleButton value="DESC">
                             Descending
                         </ToggleButton>
                     </ToggleButtonGroup>

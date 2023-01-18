@@ -120,9 +120,10 @@ export const useTableNameById = (modelId) => {
             select: (tables) => {
                 let tableNameById = {};
                 tables.forEach(({ id, name }) => {
-                    tableNameById = set(id, name, tableNameById);
+                    tableNameById = set([id], name)(tableNameById);
                 });
                 return tableNameById;
+
             },
         }
     );

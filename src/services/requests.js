@@ -87,3 +87,12 @@ export async function updateFusion({ modelId, join }) {
 }
 
 
+export async function runQuery(queryPayload) {
+    const res = await axios.post(
+        `${BASE}/query`,
+        queryPayload
+    );
+    return res.data;
+}
+
+

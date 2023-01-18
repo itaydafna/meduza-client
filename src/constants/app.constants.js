@@ -75,7 +75,6 @@ export const TEXT_FILTER_OPTIONS = {
     ENDS_WITH: "ENDS_WITH",
     IS_EMPTY: "IS_EMPTY",
     IS_NOT_EMPTY: "IS_NOT_EMPTY"
-
 }
 
 
