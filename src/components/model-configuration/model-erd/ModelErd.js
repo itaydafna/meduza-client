@@ -176,7 +176,6 @@ const ModelErd = () => {
                             <Background />
                             <Controls />
                         </StyledReactFlow>
-                        <BottomActionButtons></BottomActionButtons>
                     </FlexWrapper>
                 </ReactFlowProvider>
                 <AnimatePresence initial={false}>

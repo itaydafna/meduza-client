@@ -1,12 +1,13 @@
 import {
     Button,
     Chip,
+    Fab,
     IconButton,
     styled,
     Switch,
     TextField,
 } from '@mui/material';
-import { motion } from 'framer-motion';
+import {AnimatePresence, motion} from 'framer-motion';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import React, { useContext } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -20,7 +21,7 @@ import AddFilterDialog from './AddFilterDialog';
 import Typography from '@mui/material/Typography';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
-import { BuilderContext } from './QueryBuilder';
+import  { BuilderContext } from './QueryBuilder';
 
 const Builder = () => {
     const builderContext = useContext(BuilderContext);
@@ -46,6 +47,7 @@ const Builder = () => {
         setIsFilterDialogOpen,
         onDeleteFilter,
         addFilter,
+        isBuilderOpen
     } = builderContext;
 
     return (
@@ -229,6 +231,11 @@ const Builder = () => {
                     </li>
                 )}
             />
+            <AnimatePresence initial={false}>
+                { isBuilderOpen ?   <motion.div key={5} initial={{opacity: 0}} animate={{ opacity: 1, transition: { delay: 1 }}} exit={{opacity: 0}}>
+                    <StyledFab color="primary">Run</StyledFab>
+                </motion.div>: null}
+            </AnimatePresence>
         </BuilderContainer>
     );
 };
@@ -243,6 +250,7 @@ const BuilderContainer = styled(motion.div)`
     display: flex;
     flex-direction: column;
     padding: 50px 10px 0 25px;
+    z-index: 101;
 `;
 
 const StyledBackButton = styled(Button)`
@@ -277,6 +285,18 @@ const StyledTextField = styled(TextField)`
 
 const StyledSelect = styled(Autocomplete)`
     margin-bottom: 20px;
+`;
+
+const StyledFab = styled(Fab)`
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    z-index: 100;
+    bottom: 20px;
+    height: 100px;
+    width: 100px;
+    font-size: 20px;
 `;
 
 export default Builder;
