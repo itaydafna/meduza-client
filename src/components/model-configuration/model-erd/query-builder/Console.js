@@ -3,11 +3,13 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import {Button, styled} from "@mui/material";
 import copyIcon from '../../../../assets/copy.svg';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import DownloadIcon from '@mui/icons-material/Download';
+import {Download} from "@mui/icons-material";
 
 
 export function Console() {
     const [code, setCode] = React.useState(
-        `function add(a, b) {\n  return a + b;\n}`
+        `SELECT * FROM table`
     );
     const [isCopied, setIsCopied] = React.useState(false);
 
@@ -30,6 +32,16 @@ export function Console() {
             .catch((err) => {
                 console.log(err);
             });
+    }
+    //
+    //
+    // async function downloadDbt() {
+    //     console.log(modelId);
+    //     downloadDbtModel(modelId);
+    // }
+    //
+    const handleDbtClick = () => {
+        //downloadDbt();
     }
 
     // function ClipboardCopy() {
@@ -69,6 +81,11 @@ export function Console() {
                 <span>{isCopied ? 'Copied!' : 'Copy'}</span>
                 {isCopied ? null : <ContentCopy/>}
             </StyledCopyButton>
+            <StyledDbtButton onClick={ () => handleDbtClick()
+            }>
+                <span>{'EXPORT TO DBT MODEL'}</span>
+                {<Download/>}
+            </StyledDbtButton>
         </div>
 
 
@@ -83,3 +100,13 @@ const StyledCopyButton = styled(Button)`
     border: 5px;
     
 `;
+
+
+const StyledDbtButton = styled(Button)`
+    position: absolute;
+    bottom: 15px;
+    right: 100px;
+    border: 5px;
+    
+`;
+
