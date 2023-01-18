@@ -31,7 +31,7 @@ const TableNode = memo(({ data, id }) => {
     return (
         <TableNodeContainer>
             <div>
-                <Typography textAlign="center" variant="h5">
+                <Typography textAlign="center" variant="h5" style={{ fontSize: '20px', color: "white" , fontWeight: 600}}>
                     {name}
                 </Typography>
             </div>
@@ -87,7 +87,7 @@ const TableNodeContainer = styled('div')`
 `;
 
 const TableBody = styled('div')`
-    background: rgba(239, 232, 232, 0.66);
+    background: rgb(227, 246, 255, 0.9);
     // padding: 16px 0;
     // border-radius: 10px;
     display: flex;

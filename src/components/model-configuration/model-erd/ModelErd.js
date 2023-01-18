@@ -206,7 +206,8 @@ const StyledReactFlow = styled(ReactFlow)`
     text-color: rgb(243, 244, 246);
     node-border-radius: 10px;
     node-box-shadow: 10px 0 15px rgba(42, 138, 246, 0.3), -10px 0 15px rgba(233, 42, 103, 0.3);
-    background-color:rgb(184, 206, 255);
+    background-color:rgb(241, 246, 245);
+    // rgb(184, 206, 255)
 `;
 
 const BottomActionButtons = styled('div')`
