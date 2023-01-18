@@ -1,13 +1,10 @@
 import React, {useContext, useEffect} from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { Button, styled } from '@mui/material';
-import copyIcon from '../../../../assets/copy.svg';
 import ContentCopy from '@mui/icons-material/ContentCopy';
-import DownloadIcon from '@mui/icons-material/Download';
 import {Download} from "@mui/icons-material";
 import {ModelContext} from "../../../App";
 import {downloadDbtModel} from "../../../../services/requests";
-import {generateKipodQuery} from "../../../../utils/app.utils";
 
 import { BuilderContext } from './QueryBuilder';
 
@@ -21,7 +18,7 @@ export function Console() {
         setCode(querySql);
     }, [querySql]);
 
-    async function copyTextToClipboard(text) {
+    async function copyTextToClipboard(text) {getSelection()
         if ('clipboard' in navigator) {
             return await navigator.clipboard.writeText(text);
         } else {
@@ -48,18 +45,6 @@ export function Console() {
         downloadDbtModel(modelId, null).then(console.log);
     }
 
-    // function ClipboardCopy() {
-    //     const [isCopied, setIsCopied] = useState(false);
-    //
-    //     return (
-    //         <div>
-    //             <input type="text" value={code} readOnly />
-    //             <button>
-    //                 <span>{isCopied ? 'Copied!' : 'Copy'}</span>
-    //             </button>
-    //         </div>
-    //     );
-    // }
 
     return (
         <div>
